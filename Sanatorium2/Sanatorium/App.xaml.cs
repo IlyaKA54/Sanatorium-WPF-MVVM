@@ -7,18 +7,17 @@ namespace Sanatorium
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            var mainView = new MainWindow();
-            mainView.Show();
-            //var loginView = new LoginView();
-            //loginView.Show();
-            //loginView.IsVisibleChanged += (s, ev) =>
-            //{
-            //    if (!loginView.IsVisible && loginView.IsLoaded)
-            //    {
-            //        var mainView = new MainWindow();
-            //        mainView.Show();
-            //    }
-            //};
+
+            var loginView = new LoginView();
+            loginView.Show();
+            loginView.IsVisibleChanged += (s, ev) =>
+            {
+                if (!loginView.IsVisible && loginView.IsLoaded)
+                {
+                    var mainView = new MainWindow();
+                    mainView.Show();
+                }
+            };
         }
     }
 }

@@ -17,5 +17,9 @@ namespace Sanatorium.Model.Entities
 
         [Column(TypeName = "decimal(6, 2)")]
         public decimal Price { get; set; }
+
+        public byte[] Image { get; set; }
+
+        public string Description { get; set; }
     }
 }

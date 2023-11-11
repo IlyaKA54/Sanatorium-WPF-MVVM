@@ -95,6 +95,15 @@
                         </StackPanel>
                     </RadioButton>
 
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource color14}"
+                                 Command="{Binding ShowRoomViewComand}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="Bed" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Комнаты" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+
 
 
                 </StackPanel>

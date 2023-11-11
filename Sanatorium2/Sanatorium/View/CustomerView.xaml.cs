@@ -12,15 +12,5 @@ namespace Sanatorium.View
             DataContext = new CustomersViewModel();
         }
 
-        private void OnAddButton(object sender, System.Windows.RoutedEventArgs e)
-        {
-            //var addWindow = new AdditionCustomerView();
-            //addWindow.Show();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }

@@ -12,10 +12,6 @@
         AllowsTransparency="true" WindowStyle="None" ResizeMode="NoResize" 
         MouseDown="OnMouseDown">
 
-    <Window.DataContext>
-        <viewModel:LoginViewModel/>
-    </Window.DataContext>
-
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoleanToVisibility"/>
     </Window.Resources>

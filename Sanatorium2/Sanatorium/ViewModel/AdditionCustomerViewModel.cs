@@ -1,104 +1,18 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
-using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.IO;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Sanatorium.ViewModel
 {
-    public class AdditionCustomerViewModel : ViewModelBase
+    public class AdditionCustomerViewModel : CustomerViewModelBase
     {
-        private string? _firstName;
-        private string? _secondName;
-        private string? _surname;
-        private string? _phone;
-        private DateTime _birthDate { get; set; } = DateTime.Today;
         private string? _errorMessage;
-
-        private ImageSource _image;
-        //private AdditionCustomerView _additionCustomerView;
         private string _filePath;
-        public string? FirstName
-        {
-            get
-            {
-                return _firstName;
-
-            }
-            set
-            {
-                _firstName = value;
-                OnPropertyChanged(nameof(FirstName));
-            }
-        }
-        public string? SecondName
-        {
-            get
-            {
-                return _secondName;
-            }
-            set
-            {
-                _secondName = value;
-                OnPropertyChanged();
-            }
-        }
-        public string? Surname
-        {
-            get
-            {
-                return _surname;
-            }
-            set
-            {
-                _surname = value;
-                OnPropertyChanged();
-            }
-        }
-        public string? Phone
-        {
-            get
-            {
-                return _phone;
-            }
-            set
-            {
-                _phone = value;
-                OnPropertyChanged();
-            }
-        }
-        public DateTime BirthDate
-        {
-            get
-            {
-                return _birthDate;
-            }
-            set
-            {
-                if (value.Year < 1900 || value > DateTime.Now)
-                    return;
-                _birthDate = value;
-                OnPropertyChanged(nameof(BirthDate));
-            }
-        }
-
-        public ImageSource Image
-        {
-            get
-            {
-                return _image;
-            }
-            set
-            {
-                _image = value;
-                OnPropertyChanged();
-            }
-        }
 
         public string? ErrorMessage
         {
@@ -124,7 +38,6 @@ namespace Sanatorium.ViewModel
             AddCommand = new ViewModelCommand(ExecuteAddCustomerCommand, CanExecuteAddCustomerCommand);
             UploadImageCommand = new ViewModelCommand(ExecuteUploadImageCommand);
             CloseCommand = new ViewModelCommand(ExecuteCloseCommand);
-            //_additionCustomerView = additionCustomerView;
         }
 
         private void ExecuteCloseCommand(object obj) => Close?.Invoke();
@@ -151,8 +64,8 @@ namespace Sanatorium.ViewModel
         {
             bool validDate;
 
-            if (string.IsNullOrEmpty(_firstName) || string.IsNullOrEmpty(_secondName) ||
-                string.IsNullOrEmpty(_surname) || string.IsNullOrEmpty(_phone) || _image == null)
+            if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(SecondName) ||
+                string.IsNullOrEmpty(Surname) || string.IsNullOrEmpty(Phone) || Image == null)
                 validDate = false;
             else
                 validDate = true;
@@ -176,11 +89,11 @@ namespace Sanatorium.ViewModel
         {
             var newCustomer = new Customer
             {
-                FirstName = _firstName,
-                SecondName = _secondName,
-                Surname = _surname,
-                BirthDate = _birthDate,
-                Phone = _phone,
+                FirstName = this.FirstName,
+                SecondName = this.SecondName,
+                Surname = this.Surname,
+                BirthDate = this.BirthDate,
+                Phone = this.Phone,
                 NumberOfVisits = 0,
                 Image = GetImageBytes(),
             };

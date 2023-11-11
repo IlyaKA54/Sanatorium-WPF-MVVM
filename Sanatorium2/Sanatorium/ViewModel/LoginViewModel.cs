@@ -69,9 +69,9 @@ public class LoginViewModel : ViewModelBase
 
     public ICommand LoginCommand { get; private set; }
 
-    public LoginViewModel()
+    public LoginViewModel(IUserRepository userRepository)
     {
-        _userRepository = new UserRepository();
+        _userRepository = userRepository;
         LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
 
     }

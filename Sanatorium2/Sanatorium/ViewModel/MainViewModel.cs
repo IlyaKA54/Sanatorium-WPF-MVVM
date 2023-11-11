@@ -55,12 +55,13 @@ namespace Sanatorium.ViewModel
 
         public ICommand ShowCustomerViewCommand { get; }
 
+        public ICommand ShowRoomViewComand { get; }
+
         public MainViewModel()
         {
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowCustomerViewCommand = new ViewModelCommand(ExecuteShowCustomerViewCommand);
-
-            ExecuteShowHomeViewCommand(null);
+            ShowRoomViewComand = new ViewModelCommand(ExecuteShowRoomViewCommand);
         }
 
         private void ExecuteShowCustomerViewCommand(object obj)
@@ -77,21 +78,12 @@ namespace Sanatorium.ViewModel
             Icon = IconChar.Home;
         }
 
-        private void LoadCurrentUserData()
+        private void ExecuteShowRoomViewCommand(object obj)
         {
-            //var user = _userRepository.GetByUserName(Thread.CurrentPrincipal.Identity.Name);
-
-            //if (user != null)
-            //{
-            //    CurrentUserAccount.Username = user.Username;
-            //    CurrentUserAccount.DisplayName = $"Welcome {user.Username} {user.LastName} ;)";
-            //    CurrentUserAccount.ProfilePicture = null;
-            //}
-            //else
-            //{
-            //    CurrentUserAccount.DisplayName = "Invalid user, not logged in";
-            //    //Hide child views.
-            //}
+            CurrentChildView = new RoomsViewModel();
+            Caption = "Комнаты";
+            Icon = IconChar.Bed;
         }
+
     }
 }

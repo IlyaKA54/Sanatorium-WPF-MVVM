@@ -1,16 +1,15 @@
-﻿<Window x:Class="Sanatorium.View.AdditionCustomerView"
+﻿<Window x:Class="Sanatorium.View.EditingACustomerView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sanatorium.View"
-        xmlns:add ="clr-namespace:Sanatorium.ViewModel" d:DataContext="{d:DesignInstance Type=add:AdditionCustomerViewModel}"
+        xmlns:VM="clr-namespace:Sanatorium.ViewModel" d:DataContext="{d:DesignInstance Type=VM:EditingACustomerViewModel}"
         mc:Ignorable="d"
-        Title="AdditionCustomerView" Height="700" Width="400"
+        Title="EditingACustomerView" Height="700" Width="400"
         WindowStartupLocation="CenterScreen" Background="Transparent" 
         AllowsTransparency="true" WindowStyle="None" ResizeMode="NoResize" 
         MouseDown="OnMouseDown">
-
     <Border CornerRadius="12">
         <Border CornerRadius="10"
             BorderThickness="3">
@@ -44,7 +43,7 @@
                         <ColumnDefinition Width="5"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Регистрация"
+                    <TextBlock Text="Редактирование"
                                  Foreground="Black"
                                  FontSize="16"
                                  FontFamily="Montserrat"
@@ -94,7 +93,7 @@
                                 FontFamily="Montserrat"
                                 Cursor="Hand"
                                 Grid.Column="2"
-                                Command="{Binding CloseCommand}"
+                                Command="{Binding CancelCommand}"
                                 Margin="0,5,0,10">
                         <Button.Style>
                             <Style TargetType="Button">
@@ -125,30 +124,24 @@
                             Grid.Row="1"
                             Orientation="Vertical"
                             Margin="0,15,0,0">
-                    <TextBlock Text="Регистрация"
-                               Foreground="Black"
-                               FontSize="25"
-                               FontWeight="Medium"
-                               FontFamily="Montserrat"
-                               HorizontalAlignment="Center"/>
 
                     <Image x:Name="CustomerImage"
                             Height="64"
                             Width="64"
                             Margin="0,20"
                             Source="{Binding Image, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                        
+    
                     </Image>
                     <Button Name="btnUpload"
-                            Command="{Binding UploadImageCommand}"
+                            Command="{Binding EditImageCommand}"
                             Height="20"
                             Width="100"
                             Margin="0,0"
                             Content="Загрузить"
                             Background="#00FF00">
-                        
+
                     </Button>
-                    
+
                     <TextBlock Text="Фамилия"
                                Foreground="Black"
                                FontSize="12"
@@ -285,7 +278,7 @@
                                TextWrapping="Wrap"/>
 
                     <Button x:Name="btnAdd"
-                            Command="{Binding AddCommand}"
+                            Command="{Binding SaveChangesCommand}"
                             BorderThickness="0"
                             Content="Сохранить"
                             Foreground="White"
@@ -323,5 +316,4 @@
             </Grid>
         </Border>
     </Border>
-
 </Window>

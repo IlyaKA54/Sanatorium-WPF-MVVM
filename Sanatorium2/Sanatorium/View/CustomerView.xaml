@@ -33,7 +33,7 @@
                     BorderThickness="0,0,0,1"                             
                     VerticalContentAlignment="Center"
                     Margin="5,5,0,0"
-                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextChanged="TextBox_TextChanged"/>
+                    Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
   
                 <Button 
                     Margin="10,0,0,0"
@@ -112,7 +112,7 @@
                                 </Grid.ColumnDefinitions>
 
                                 <Image Source="{Binding Image}" HorizontalAlignment="Center" 
-                                       Grid.Column="0" Width="100" Height="100"/>
+                                       Grid.Column="0" Width="64" Height="64"/>
 
                                 <Grid Grid.Column="1">
                                     <Grid.RowDefinitions>
@@ -129,13 +129,23 @@
                                             <ColumnDefinition Width="10"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="30"/>
+                                            <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
 
                                         <TextBlock Grid.Column="0" Text="{Binding SecondName}"/>
                                         <TextBlock Grid.Column="2" Text="{Binding FirstName}"/>
                                         <TextBlock Grid.Column="4" Text="{Binding Surname}" />
                                         <Button Width="10" Height="10" Grid.Column="5" 
-                                                Background="Red" VerticalAlignment="Top">
+                                                Background="Blue" VerticalAlignment="Top"
+                                                Command="{Binding DataContext.ShowEditWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}">
+                                            <fa:IconImage Icon="Pen" Foreground="White"/>
+                                        </Button>
+                                        
+                                        <Button Width="10" Height="10" Grid.Column="6" 
+                                                Background="Red" VerticalAlignment="Top"
+                                                Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}">
                                             <fa:IconImage Icon="Xmark" Foreground="White"/>
                                         </Button>
                                     </Grid>

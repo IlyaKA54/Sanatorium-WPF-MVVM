@@ -13,7 +13,8 @@ namespace Sanatorium.ViewModel
     public class CustomersViewModel : ViewModelBase
     {
         private ObservableCollection<Customer> customers;
-        private AdditionCustomerView _checkView;
+        private AdditionCustomerView _activeAdditionalCustomerView;
+        private EditingACustomerView _activeEditingACustomerView;
         private string? _searchText;
         public ObservableCollection<Customer> Customers
         {
@@ -43,12 +44,17 @@ namespace Sanatorium.ViewModel
         }
 
         public ICommand ShowAdditionalWindowCommand { get; private set; }
+
+        public ICommand ShowEditWindowCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
+        public ICommand DeleteCustomerCommand { get; private set; }
         public CustomersViewModel()
         {
             Customers = new ObservableCollection<Customer>();
             ShowAdditionalWindowCommand = new ViewModelCommand(ExecuteShowAdditionalWindowCommand);
             RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
+            DeleteCustomerCommand = new ViewModelCommand(ExecuteDeleteCustomerCommand);
+            ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
             LoadCustomers();
         }
 
@@ -59,20 +65,62 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteShowAdditionalWindowCommand(object obg)
         {
-            if (_checkView == null || _checkView.DataContext == null)
+            if (_activeAdditionalCustomerView == null || _activeAdditionalCustomerView.DataContext == null)
             {
-                _checkView = new AdditionCustomerView();
-                (_checkView.DataContext as AdditionCustomerViewModel).Close += Close;
-                _checkView.Show();
+                _activeAdditionalCustomerView = new AdditionCustomerView();
+                (_activeAdditionalCustomerView.DataContext as AdditionCustomerViewModel).Close += CloseAdditionalCustomerWindow;
+                _activeAdditionalCustomerView.Show();
             }
         }
-        private void Close()
+
+        private void ExecuteShowEditWindowCommand(object obj)
         {
-            if(_checkView != null)
+            if(obj is Customer customer)
             {
-                _checkView.Close();
-                _checkView = null;
-                Debug.Write(1);
+                if (_activeEditingACustomerView == null || _activeEditingACustomerView.DataContext == null)
+                {
+                    var editViewModel = new EditingACustomerViewModel(customer);
+
+                    editViewModel.Close += CloseEditingACustomerView;
+
+                    _activeEditingACustomerView = new EditingACustomerView
+                    {
+                        DataContext = editViewModel
+                    };
+
+                    _activeEditingACustomerView.Show();
+                }
+            }
+        }
+
+        private void ExecuteDeleteCustomerCommand(object parameter)
+        {
+            if (parameter is Customer customerToRemove)
+            {
+                Customers.Remove(customerToRemove);
+
+                using (var context = new SanatoriumContext())
+                {
+                    context.Customers.Remove(customerToRemove);
+                    context.SaveChanges();
+                }
+            }
+        }
+        private void CloseAdditionalCustomerWindow()
+        {
+            if(_activeAdditionalCustomerView != null)
+            {
+                _activeAdditionalCustomerView.Close();
+                _activeAdditionalCustomerView = null;
+            }
+        }
+
+        private void CloseEditingACustomerView()
+        {
+            if(_activeEditingACustomerView != null)
+            {
+                _activeEditingACustomerView.Close();
+                _activeEditingACustomerView = null;
             }
         }
         public void LoadCustomers(string? str = null)

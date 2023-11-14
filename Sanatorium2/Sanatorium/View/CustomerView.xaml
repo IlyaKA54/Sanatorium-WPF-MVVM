@@ -144,7 +144,7 @@
                                         
                                         <Button Width="10" Height="10" Grid.Column="6" 
                                                 Background="Red" VerticalAlignment="Top"
-                                                Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                Command="{Binding DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}">
                                             <fa:IconImage Icon="Xmark" Foreground="White"/>
                                         </Button>

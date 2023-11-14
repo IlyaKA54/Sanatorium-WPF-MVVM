@@ -12,7 +12,7 @@ namespace Sanatorium.ViewModel
 {
     public class CustomersViewModel : ViewModelBase
     {
-        private ObservableCollection<Customer> customers;
+        private ObservableCollection<Customer> _customers;
         private AdditionCustomerView _activeAdditionalCustomerView;
         private EditingACustomerView _activeEditingACustomerView;
         private string? _searchText;
@@ -20,11 +20,11 @@ namespace Sanatorium.ViewModel
         {
             get
             {
-                return customers;
+                return _customers;
             }
             set
             {
-                customers = value;
+                _customers = value;
                 OnPropertyChanged();
             }
         }

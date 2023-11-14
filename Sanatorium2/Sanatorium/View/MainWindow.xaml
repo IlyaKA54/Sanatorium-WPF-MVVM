@@ -24,6 +24,10 @@
         <DataTemplate DataType="{x:Type viewModel:CustomersViewModel}">
             <local1:CustomerView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:RoomsViewModel}">
+            <local1:RoomsView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border CornerRadius="10"

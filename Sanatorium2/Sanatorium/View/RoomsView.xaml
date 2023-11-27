@@ -53,21 +53,25 @@
             <ItemsControl Grid.Row="1" Margin="0,20,0,0" ItemsSource="{Binding Rooms}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="10" BorderBrush="#00CED1" BorderThickness="1">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-
-                                <TextBlock Grid.Row="0" Text="{Binding Name}" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Row="1" Text="{Binding Type}" HorizontalAlignment="Center"/>
-                                <TextBlock Grid.Row="2" Text="{Binding NumberOfPlaces}" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            </Grid>
+                        <Border Padding="10" BorderBrush="Black" BorderThickness="1" Margin="0 0 10 10" Width="200" Height="70">
+                            <Border.ToolTip>
+                                <ToolTip Content="{Binding Description}"/>
+                            </Border.ToolTip>
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding Image}" Stretch="UniformToFill" Opacity="0.5"/>
+                            </Border.Background>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Name}" FontSize="18"/>
+                                <TextBlock Text="{Binding Price, StringFormat='₽{0:N2}'}" Foreground="Black" FontWeight="Bold"/>
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
             </ItemsControl>
         </ScrollViewer>
 

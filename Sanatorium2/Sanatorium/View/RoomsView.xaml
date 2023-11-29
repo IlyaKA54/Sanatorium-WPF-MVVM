@@ -16,6 +16,12 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="120"/>
             </Grid.ColumnDefinitions>
+            <StackPanel>
+                <ComboBox Width="200"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}"/>
+            </StackPanel>
             <Button Grid.Column="1"                    
                             Content="Добавить"                            
                             FontSize="12"

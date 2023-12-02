@@ -93,7 +93,7 @@ namespace Sanatorium.ViewModel
         {
             if (_currentActiveAdditionWindow != null)
             {
-                _currentActiveAdditionWindow.Close();
+                _currentActiveAdditionWindow?.Close();
                 _currentActiveAdditionWindow = null;
                 LoadRooms();
             }

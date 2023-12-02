@@ -28,6 +28,10 @@
         <DataTemplate DataType="{x:Type viewModel:RoomsViewModel}">
             <local1:RoomsView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:TreatmentProgramViewModel}">
+            <local1:TreatmentProgramView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border CornerRadius="10"
@@ -105,6 +109,15 @@
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Bed" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Комнаты" Style="{StaticResource menuButtonText}"/>
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton Style="{StaticResource menuButton}"
+                                 Tag="{StaticResource color6}"
+                                 Command="{Binding ShowTreatmentProgramsViewComand}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="HouseMedical" Style="{StaticResource menuButtonIcon}"/>
+                            <TextBlock Text="Программы лечения" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
 

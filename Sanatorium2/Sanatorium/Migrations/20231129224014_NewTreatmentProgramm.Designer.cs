@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sanatorium.Model.Data;
 
@@ -11,9 +12,11 @@ using Sanatorium.Model.Data;
 namespace Sanatorium.Migrations
 {
     [DbContext(typeof(SanatoriumContext))]
-    partial class SanatoriumContextModelSnapshot : ModelSnapshot
+    [Migration("20231129224014_NewTreatmentProgramm")]
+    partial class NewTreatmentProgramm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

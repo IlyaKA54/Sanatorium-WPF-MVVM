@@ -1,6 +1,7 @@
 ﻿using FontAwesome.Sharp;
 using Sanatorium.Model.Repositories;
 using Sanatorium.ViewModel.Base;
+using System;
 using System.Windows.Input;
 
 namespace Sanatorium.ViewModel
@@ -56,12 +57,21 @@ namespace Sanatorium.ViewModel
         public ICommand ShowCustomerViewCommand { get; }
 
         public ICommand ShowRoomViewComand { get; }
+        public ICommand ShowTreatmentProgramsViewComand { get; }
 
         public MainViewModel()
         {
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowCustomerViewCommand = new ViewModelCommand(ExecuteShowCustomerViewCommand);
             ShowRoomViewComand = new ViewModelCommand(ExecuteShowRoomViewCommand);
+            ShowTreatmentProgramsViewComand = new ViewModelCommand(ExecuteShowTreatmentProgramViewCommand);
+        }
+
+        private void ExecuteShowTreatmentProgramViewCommand(object obj)
+        {
+            CurrentChildView = new TreatmentProgramViewModel();
+            Caption = "Программы лечения";
+            Icon = IconChar.HouseMedical;
         }
 
         private void ExecuteShowCustomerViewCommand(object obj)

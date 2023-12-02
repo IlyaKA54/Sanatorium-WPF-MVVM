@@ -3,9 +3,9 @@ using System.Windows.Input;
 
 namespace Sanatorium.View;
 
-public partial class EditingACustomerView : Window
+public partial class EditingARoomView : Window
 {
-    public EditingACustomerView()
+    public EditingARoomView()
     {
         InitializeComponent();
     }

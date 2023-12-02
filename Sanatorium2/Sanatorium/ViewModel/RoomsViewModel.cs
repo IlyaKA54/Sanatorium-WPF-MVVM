@@ -1,7 +1,9 @@
-﻿using Sanatorium.Model.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -13,6 +15,8 @@ namespace Sanatorium.ViewModel
         private ObservableCollection<Room> _rooms;
 
         private AdditionRoomView _currentActiveAdditionWindow;
+        private EditingARoomView _activeEditingARoomView;
+
         private ObservableCollection<string> _types;
         private string _selectedType;
 
@@ -58,6 +62,7 @@ namespace Sanatorium.ViewModel
 
         public ICommand ShowAddRoomCommand { get; private set; }
 
+        public ICommand ShowEditWindowCommand { get; private set; }
         public RoomsViewModel()
         {
             _rooms = new ObservableCollection<Room>();
@@ -65,9 +70,41 @@ namespace Sanatorium.ViewModel
             _types.Add("Все номера");
 
             ShowAddRoomCommand = new ViewModelCommand(ExecuteShowAddRoomWindowCommand);
+            ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
 
             LoadRooms();
             _types = new ObservableCollection<string>(_types.Concat(LoadTypesOfRoom()));
+        }
+
+        private void ExecuteShowEditWindowCommand(object obj)
+        {
+
+            if (obj is Room room)
+            {
+                if (_activeEditingARoomView == null || _activeEditingARoomView.DataContext == null)
+                {
+                    var editViewModel = new EditingARoomViewModel(room);
+
+                    editViewModel.Close += CloseEditingATreatmentProgramView;
+
+                    _activeEditingARoomView = new EditingARoomView
+                    {
+                        DataContext = editViewModel
+                    };
+
+                    _activeEditingARoomView.Show();
+                }
+            }
+        }
+
+        private void CloseEditingATreatmentProgramView()
+        {
+            if (_activeEditingARoomView != null)
+            {
+                _activeEditingARoomView.Close();
+                _activeEditingARoomView = null;
+                LoadRooms();
+            }
         }
 
         private ObservableCollection<string> LoadTypesOfRoom()
@@ -104,7 +141,7 @@ namespace Sanatorium.ViewModel
             using (var context = new SanatoriumContext())
             {
                 if(str == null || str == _types[0])
-                    Rooms = new ObservableCollection<Room>(context.Rooms.ToList());
+                    Rooms = new ObservableCollection<Room>(context.Rooms.Include(a => a.Type).ToList());
                 else
                     Rooms = new ObservableCollection<Room>(context.Rooms.Where(r => r.Type.Type == str));
             }

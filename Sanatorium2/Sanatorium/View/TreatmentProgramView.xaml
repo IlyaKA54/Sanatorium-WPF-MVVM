@@ -114,7 +114,9 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Width="10" Height="10" Margin="10,0,5,20" Background="Blue" 
-                                            VerticalAlignment="Top">
+                                            VerticalAlignment="Top" 
+                                            Command="{Binding DataContext.ShowEditWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}">
                                         <fa:IconImage Icon="Pen" Foreground="White"/>
                                     </Button>
                                     <Button Width="10" Height="10" Margin="0,0,0,20" Background="Red" 

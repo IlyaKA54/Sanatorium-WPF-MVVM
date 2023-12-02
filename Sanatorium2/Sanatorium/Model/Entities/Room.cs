@@ -11,7 +11,7 @@ namespace Sanatorium.Model.Entities
         public string? Name { get; set; }
 
         [Required]
-        public TypeOfRoom? Type { get; set; }
+        public TypeOfRoom Type { get; set; }
 
         public int NumberOfPlaces { get; set; }
 

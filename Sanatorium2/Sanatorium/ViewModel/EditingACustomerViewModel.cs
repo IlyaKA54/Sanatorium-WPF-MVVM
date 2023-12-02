@@ -42,9 +42,22 @@ public class EditingACustomerViewModel : CustomerViewModelBase
 
         Init(_customer);
 
-        SaveChangesCommand = new ViewModelCommand(ExecuteSaveChangesCommand);
+        SaveChangesCommand = new ViewModelCommand(ExecuteSaveChangesCommand, CanExecuteSaveChangesCommand);
         EditImageCommand = new ViewModelCommand(ExecuteEditImageCommand);
         CancelCommand = new ViewModelCommand(ExecuteCancelCommand);
+    }
+
+    private bool CanExecuteSaveChangesCommand(object obj)
+    {
+        bool validDate;
+
+        if (string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(SecondName) ||
+            string.IsNullOrEmpty(Surname) || string.IsNullOrEmpty(Phone) || Image == null)
+            validDate = false;
+        else
+            validDate = true;
+
+        return validDate;
     }
 
     private void Init(Customer customerToEdit)

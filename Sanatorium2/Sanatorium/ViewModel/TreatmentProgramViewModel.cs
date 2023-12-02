@@ -16,6 +16,7 @@ class TreatmentProgramViewModel : ViewModelBase
     private string? _searchText;
 
     private AdditionTreatmentProgramView _currentAdditionTreatmentProgramViewModel;
+    private EditingATreatmentProgramView _activeEditingATreatmentProgramView;
 
     public string? SearchText
     {
@@ -62,7 +63,32 @@ class TreatmentProgramViewModel : ViewModelBase
 
     private void ExecuteShowEditWindowCommand(object obj)
     {
-        LoadTreatmentPrograms(_searchText);
+        if (obj is TreatmentProgram program)
+        {
+            if (_activeEditingATreatmentProgramView == null || _activeEditingATreatmentProgramView.DataContext == null)
+            {
+                var editViewModel = new EditingATreatmentProgramViewModel(program);
+
+                editViewModel.Close += CloseEditingATreatmentProgramView;
+
+                _activeEditingATreatmentProgramView = new EditingATreatmentProgramView
+                {
+                    DataContext = editViewModel
+                };
+
+                _activeEditingATreatmentProgramView.Show();
+            }
+        }
+    }
+
+    private void CloseEditingATreatmentProgramView()
+    {
+        if (_activeEditingATreatmentProgramView != null)
+        {
+            _activeEditingATreatmentProgramView.Close();
+            _activeEditingATreatmentProgramView = null;
+            LoadTreatmentPrograms();
+        }
     }
 
     private void ExecuteDeleteTreatmentProgramCommand(object obj)

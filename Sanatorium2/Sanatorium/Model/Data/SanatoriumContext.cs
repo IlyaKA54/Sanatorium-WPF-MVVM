@@ -13,6 +13,7 @@ namespace Sanatorium.Model.Data
         public DbSet<CustomerOrder> CustomerOrders { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<RoomStatus> RoomStatuses { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

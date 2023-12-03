@@ -105,6 +105,7 @@
                     <DataTemplate>
                         <Border Padding="10" BorderBrush="#00CED1" BorderThickness="1">
                             <Grid>
+                                
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition/>
@@ -130,6 +131,7 @@
                                             <ColumnDefinition Width="30"/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
+                                                                              
 
                                         <TextBlock Grid.Column="0" Text="{Binding SecondName}"/>
                                         <TextBlock Grid.Column="2" Text="{Binding FirstName}"/>
@@ -147,6 +149,26 @@
                                                 CommandParameter="{Binding}">
                                             <fa:IconImage Icon="Xmark" Foreground="White"/>
                                         </Button>
+
+                                        <ToggleButton Content="Нажми меня"
+                                                      Width="100"
+                                                      Height="30"
+                                                      Command="{Binding DataContext.UnselectACustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                      CommandParameter="{Binding}">
+
+                                            <!-- Стиль для изменения фона при нажатии -->
+                                            <ToggleButton.Style>
+                                                <Style TargetType="ToggleButton">
+                                                    <Setter Property="Background" Value="Yellow"/>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsChecked" Value="True">
+                                                            <Setter Property="Background" Value="Green"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+
+                                        </ToggleButton>
                                     </Grid>
 
                                     <TextBlock Grid.Row="1" Text="{Binding BirthDate}"/>

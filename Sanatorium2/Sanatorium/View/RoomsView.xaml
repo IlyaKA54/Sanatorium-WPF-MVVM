@@ -21,6 +21,7 @@
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}"/>
+
             </StackPanel>
             <Button Grid.Column="1"                    
                             Content="Добавить"                            

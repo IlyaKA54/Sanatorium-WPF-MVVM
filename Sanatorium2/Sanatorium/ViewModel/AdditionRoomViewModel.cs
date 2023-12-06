@@ -199,7 +199,7 @@ public class AdditionRoomViewModel : ViewModelBase
             NumberOfPlaces = int.Parse(this.NumberOfPlaces),
             Description = this.Description,
             Image = GetImageBytes(),
-            Status = context.RoomStatuses.FirstOrDefault(t => t.Id == 1),
+            Status = context.RoomStatuses.FirstOrDefault(t => t.Id == 2),
             Type = GetTypeOfRoomByType(_selectedType, context)
         };
 

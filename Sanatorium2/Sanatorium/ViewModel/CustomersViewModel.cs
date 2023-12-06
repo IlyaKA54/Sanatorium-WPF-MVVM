@@ -154,7 +154,7 @@ namespace Sanatorium.ViewModel
                 _activeEditingACustomerView = null;
             }
         }
-        public void LoadCustomers(string? str = null)
+        private void LoadCustomers(string? str = null)
         {
             using (var context = new SanatoriumContext())
             {

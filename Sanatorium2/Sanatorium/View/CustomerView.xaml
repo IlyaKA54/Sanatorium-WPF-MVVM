@@ -142,33 +142,13 @@
                                                 CommandParameter="{Binding}">
                                             <fa:IconImage Icon="Pen" Foreground="White"/>
                                         </Button>
-                                        
+
                                         <Button Width="10" Height="10" Grid.Column="6" 
                                                 Background="Red" VerticalAlignment="Top"
                                                 Command="{Binding DataContext.DeleteCustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                 CommandParameter="{Binding}">
                                             <fa:IconImage Icon="Xmark" Foreground="White"/>
                                         </Button>
-
-                                        <ToggleButton Content="Нажми меня"
-                                                      Width="100"
-                                                      Height="30"
-                                                      Command="{Binding DataContext.UnselectACustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                      CommandParameter="{Binding}">
-
-                                            <!-- Стиль для изменения фона при нажатии -->
-                                            <ToggleButton.Style>
-                                                <Style TargetType="ToggleButton">
-                                                    <Setter Property="Background" Value="Yellow"/>
-                                                    <Style.Triggers>
-                                                        <Trigger Property="IsChecked" Value="True">
-                                                            <Setter Property="Background" Value="Green"/>
-                                                        </Trigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </ToggleButton.Style>
-
-                                        </ToggleButton>
                                     </Grid>
 
                                     <TextBlock Grid.Row="1" Text="{Binding BirthDate}"/>

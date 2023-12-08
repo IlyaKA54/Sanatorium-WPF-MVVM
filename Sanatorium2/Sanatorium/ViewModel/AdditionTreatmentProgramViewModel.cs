@@ -117,11 +117,8 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
         Image = new BitmapImage(new System.Uri(filePath));
     }
 
-    private TreatmentProgram GetTreamentProgramm(SanatoriumContext context)
+    private TreatmentProgram GetTreamentProgramm()
     {
-        if (context == null)
-            throw new NullReferenceException("An empty context was passed");
-
         var newTreatmentProgram = new TreatmentProgram()
         {
             Name = this.Name,
@@ -161,7 +158,7 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
     {
         using (var context = new SanatoriumContext())
         {
-            context.TreatmentPrograms.Add(GetTreamentProgramm(context));
+            context.TreatmentPrograms.Add(GetTreamentProgramm());
             context.SaveChanges();
             Close?.Invoke();
         }

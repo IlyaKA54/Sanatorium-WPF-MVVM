@@ -1,4 +1,5 @@
-﻿using Sanatorium.Model.Data;
+﻿using Ninject.Activation;
+using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
 using Sanatorium.ViewModel.Base;
 using System;
@@ -15,6 +16,24 @@ namespace Sanatorium.ViewModel
     {
         private ObservableCollection<Customer> _allCustomers;
         private ObservableCollection<Customer> _selectedCustomers;
+
+        private ObservableCollection<Customer> _startList;
+
+        private string _searchText;
+
+        public string SearchText
+        {
+            get
+            {
+                return _searchText;
+            }
+
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<Customer> AllCustomers
         {
@@ -44,14 +63,26 @@ namespace Sanatorium.ViewModel
         }
 
         public ICommand MoveACustomerCommand { get; private set; }
+        public ICommand RefreshCommand { get; private set; }
         public CustomerSelectionViewModel()
         {
-            _allCustomers = new ObservableCollection<Customer>();
+            _startList = new ObservableCollection<Customer>();  
             _selectedCustomers = new ObservableCollection<Customer>();
 
             MoveACustomerCommand = new ViewModelCommand(ExecuteMoveACustomerCommand);
+            RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
 
             LoadCustomers();
+            _allCustomers = new ObservableCollection<Customer>(_startList);
+        }
+
+        private void ExecuteRefreshCommand(object obj)
+        {
+            if (string.IsNullOrEmpty(_searchText))
+                AllCustomers = new ObservableCollection<Customer>(_startList);
+            else
+                AllCustomers = new ObservableCollection<Customer>(_startList.Where(c => c.SecondName.StartsWith(_searchText) ||
+                    c.Surname.StartsWith(_searchText) || c.FirstName.StartsWith(_searchText) || c.Phone.StartsWith(_searchText)).ToList());
         }
 
         private void ExecuteMoveACustomerCommand(object obj)
@@ -75,7 +106,7 @@ namespace Sanatorium.ViewModel
         {
             using (var context = new SanatoriumContext())
             {
-                AllCustomers = new ObservableCollection<Customer>(context.Customers.ToList());
+                _startList = new ObservableCollection<Customer>(context.Customers.ToList());
             }
         }
     }

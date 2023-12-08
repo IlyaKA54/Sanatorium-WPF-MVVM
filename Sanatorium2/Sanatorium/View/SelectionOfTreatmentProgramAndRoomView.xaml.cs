@@ -1,18 +1,19 @@
-﻿using Sanatorium.ViewModel;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Sanatorium.ViewModel;
 
 namespace Sanatorium.View
 {
-    public partial class CustomerSelectionView : Window
+
+    public partial class SelectionOfTreatmentProgramAndRoomView : Window
     {
-        public CustomerSelectionView()
+        public SelectionOfTreatmentProgramAndRoomView()
         {
             InitializeComponent();
-            DataContext = new CustomerSelectionViewModel();
+            DataContext = new SelectionOfTreatmentProgramAndRoomViewModel();
         }
 
         [DllImport("user32.dll")]

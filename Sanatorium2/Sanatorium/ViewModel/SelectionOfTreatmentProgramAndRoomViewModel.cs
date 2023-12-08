@@ -3,16 +3,13 @@ using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
 using Sanatorium.ViewModel.Base;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace Sanatorium.ViewModel
 {
-    class SelectionOfTreatmentProgramAndRoomViewModel : ViewModelBase
+    public class SelectionOfTreatmentProgramAndRoomViewModel : ViewModelBase
     {
         private ObservableCollection<CustomerOrder> _customers;
         private ObservableCollection<Room> _rooms;
@@ -89,13 +86,15 @@ namespace Sanatorium.ViewModel
 
         public ICommand CreateOrderCommand { get; private set; }
 
-        public SelectionOfTreatmentProgramAndRoomViewModel()
+        public Action Close;
+
+        public SelectionOfTreatmentProgramAndRoomViewModel(ObservableCollection<Customer> customers)
         {
             _customers = new ObservableCollection<CustomerOrder>();
 
             CreateOrderCommand = new ViewModelCommand(ExecuteCreateOrderCommand, CanExecuteCreateOrderCommand);
 
-            LoadCustomers();
+            LoadCustomers(customers);
 
             LoadRooms();
             LoadTreatmentPrograms();
@@ -129,6 +128,24 @@ namespace Sanatorium.ViewModel
             {
                 context.Orders.Add(GetNewOrder());
                 context.SaveChanges();
+            }
+
+            SaveCustomerOrders();
+        }
+
+        private void SaveCustomerOrders()
+        {
+            using (var context = new SanatoriumContext())
+            {
+                var last = context.Orders.OrderByDescending(order => order.Id).First();
+
+                foreach (var customer in _customers)
+                {
+                    customer.IdOrder = last;
+                    context.CustomerOrders.Add(customer);
+                    context.SaveChanges();
+                }
+
             }
         }
 
@@ -164,16 +181,11 @@ namespace Sanatorium.ViewModel
             customer.NumberOfVisits++;
         }
 
-        private void LoadCustomers()
+        private void LoadCustomers(ObservableCollection<Customer> customers)
         {
-            using (var context = new SanatoriumContext())
+            foreach (var customer in customers)
             {
-                var a = new ObservableCollection<Customer>(context.Customers.ToList());
-
-                foreach (var item in a)
-                {
-                    _customers.Add(new CustomerOrder { Customer = item });
-                }
+                _customers.Add(new CustomerOrder { Customer = customer });
             }
         }
 

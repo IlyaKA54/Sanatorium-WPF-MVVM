@@ -13,7 +13,6 @@ namespace Sanatorium.View
         public SelectionOfTreatmentProgramAndRoomView()
         {
             InitializeComponent();
-            DataContext = new SelectionOfTreatmentProgramAndRoomViewModel();
         }
 
         [DllImport("user32.dll")]
@@ -41,5 +40,12 @@ namespace Sanatorium.View
                 this.WindowState = WindowState.Maximized;
             else this.WindowState = WindowState.Normal;
         }
+
+        public void SetDataContext(SelectionOfTreatmentProgramAndRoomViewModel selectionOfTreatmentProgramAndRoomViewModel)
+        {
+            selectionOfTreatmentProgramAndRoomViewModel.Close += this.Close;
+            DataContext = selectionOfTreatmentProgramAndRoomViewModel;
+        }
+
     }
 }

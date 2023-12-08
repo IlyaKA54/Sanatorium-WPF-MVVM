@@ -16,7 +16,7 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteShowWindow(object obj)
         {
-            var newWindow = new SelectionOfTreatmentProgramAndRoomView();
+            var newWindow = new CustomerSelectionView();
             newWindow.Show();
         }
     }

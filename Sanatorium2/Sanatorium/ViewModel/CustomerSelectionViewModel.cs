@@ -1,14 +1,12 @@
-﻿using Ninject.Activation;
-using Sanatorium.Model.Data;
+﻿using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Sanatorium.ViewModel
 {
@@ -64,16 +62,36 @@ namespace Sanatorium.ViewModel
 
         public ICommand MoveACustomerCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
+        public ICommand CheckInCustomersCommand { get; private set; }
+        public ICommand CloseCommand { get; private set; }
+
+        public Action Close;
         public CustomerSelectionViewModel()
         {
-            _startList = new ObservableCollection<Customer>();  
+            _startList = new ObservableCollection<Customer>();
             _selectedCustomers = new ObservableCollection<Customer>();
 
             MoveACustomerCommand = new ViewModelCommand(ExecuteMoveACustomerCommand);
             RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
+            CheckInCustomersCommand = new ViewModelCommand(ExecuteCheckInCustomerCommand);
+            CloseCommand = new ViewModelCommand(ExecuteCloseCommand);
 
             LoadCustomers();
             _allCustomers = new ObservableCollection<Customer>(_startList);
+        }
+
+        private void ExecuteCloseCommand(object obj)
+        {
+            Close?.Invoke();
+        }
+
+        private void ExecuteCheckInCustomerCommand(object obj)
+        {
+            var newWindow = new SelectionOfTreatmentProgramAndRoomView();
+            newWindow.SetDataContext(new SelectionOfTreatmentProgramAndRoomViewModel(_selectedCustomers));
+            newWindow.Show();
+            Close?.Invoke();
+            
         }
 
         private void ExecuteRefreshCommand(object obj)
@@ -87,9 +105,9 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteMoveACustomerCommand(object obj)
         {
-            if(obj is Customer customer)
+            if (obj is Customer customer)
             {
-                if(AllCustomers.Contains(customer))
+                if (AllCustomers.Contains(customer))
                 {
                     AllCustomers.Remove(customer);
                     SelectedCustomers.Add(customer);

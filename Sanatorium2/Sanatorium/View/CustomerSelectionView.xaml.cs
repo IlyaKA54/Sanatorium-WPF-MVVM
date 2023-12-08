@@ -12,7 +12,9 @@ namespace Sanatorium.View
         public CustomerSelectionView()
         {
             InitializeComponent();
-            DataContext = new CustomerSelectionViewModel();
+            var context = new CustomerSelectionViewModel();
+            context.Close += this.Close;
+            DataContext = context;
         }
 
         [DllImport("user32.dll")]
@@ -40,5 +42,6 @@ namespace Sanatorium.View
                 this.WindowState = WindowState.Maximized;
             else this.WindowState = WindowState.Normal;
         }
+
     }
 }

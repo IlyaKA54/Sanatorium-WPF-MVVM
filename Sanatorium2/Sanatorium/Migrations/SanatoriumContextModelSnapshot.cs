@@ -72,7 +72,7 @@ namespace Sanatorium.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("OrderId")
+                    b.Property<int>("IdOrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoomId")
@@ -85,7 +85,7 @@ namespace Sanatorium.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("IdOrderId");
 
                     b.HasIndex("RoomId");
 
@@ -247,9 +247,11 @@ namespace Sanatorium.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sanatorium.Model.Entities.Order", null)
-                        .WithMany("IdCustomerOrders")
-                        .HasForeignKey("OrderId");
+                    b.HasOne("Sanatorium.Model.Entities.Order", "IdOrder")
+                        .WithMany()
+                        .HasForeignKey("IdOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Sanatorium.Model.Entities.Room", "Room")
                         .WithMany()
@@ -262,6 +264,8 @@ namespace Sanatorium.Migrations
                         .HasForeignKey("TreatmentProgramId");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("IdOrder");
 
                     b.Navigation("Room");
 
@@ -285,11 +289,6 @@ namespace Sanatorium.Migrations
                     b.Navigation("Status");
 
                     b.Navigation("Type");
-                });
-
-            modelBuilder.Entity("Sanatorium.Model.Entities.Order", b =>
-                {
-                    b.Navigation("IdCustomerOrders");
                 });
 #pragma warning restore 612, 618
         }

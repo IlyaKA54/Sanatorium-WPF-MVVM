@@ -14,5 +14,8 @@ namespace Sanatorium.Model.Entities
         [Required]
         public Room? Room { get; set; }
 
+        [Required]
+        public Order IdOrder { get; set; }
+
     }
 }

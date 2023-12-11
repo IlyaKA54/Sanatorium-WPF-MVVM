@@ -12,6 +12,11 @@ namespace Sanatorium.ViewModel
         private string _caption;
         private IconChar _icon;
         private IUserRepository _userRepository;
+        private bool _isHomeButtonVisible = true;
+        private bool _isCustomerButtonVisible = false;
+        private bool _isReportButtonVisible = false;
+        private bool _isRoomButtonVisible = false;
+        private bool _isTreatmentProgramsButtonVisible = true;
 
         public ViewModelBase CurrentChildView
         {
@@ -51,6 +56,12 @@ namespace Sanatorium.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public bool IsHomeButtonVisible { get => _isHomeButtonVisible; set { _isHomeButtonVisible = value; OnPropertyChanged(); } }
+        public bool IsCustomerButtonVisible { get => _isCustomerButtonVisible; set { _isCustomerButtonVisible = value; OnPropertyChanged(); } }
+        public bool IsReportButtonVisible { get => _isReportButtonVisible; set { _isReportButtonVisible = value; OnPropertyChanged(); }  }
+        public bool IsRoomButtonVisible { get => _isRoomButtonVisible; set { _isRoomButtonVisible = value; OnPropertyChanged(); } }
+        public bool IsTreatmentProgramsButtonVisible { get => _isTreatmentProgramsButtonVisible; set { _isTreatmentProgramsButtonVisible = value; OnPropertyChanged(); } }
 
         public ICommand ShowHomeViewCommand { get; }
 

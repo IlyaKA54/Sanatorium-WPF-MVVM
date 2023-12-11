@@ -1,0 +1,131 @@
+﻿<UserControl x:Class="Sanatorium.View.ReportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Sanatorium.View" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf" xmlns:viewmodel="clr-namespace:Sanatorium.ViewModel" xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" d:DataContext="{d:DesignInstance Type=viewmodel:ReportViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0"
+            FlowDirection="LeftToRight"
+            Orientation="Horizontal">
+            <TextBlock Text="От :"
+               Foreground="Black"
+               FontSize="12"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               VerticalAlignment="Center"
+                       Margin="10,0,0,0"/>
+
+            <DatePicker x:Name="txtData"
+                    SelectedDate="{Binding FirstDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 FontSize="13"
+                 FontWeight="Medium"
+                 FontFamily="Montserrat"                            
+                 Foreground="Black"
+                 BorderBrush="Black"
+                 BorderThickness="0,0,0,2"
+                 Height="25"
+                    Width="150"
+                 VerticalContentAlignment="Center"
+                Margin="10,0,0,0">
+                <DatePicker.Resources>
+                    <Style TargetType="{x:Type DatePickerTextBox}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=Text}"
+                   Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=Foreground}"
+                   TextAlignment="Left"
+                   FontWeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontWeight}"
+                   FontFamily="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontFamily}"
+                   FontSize="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontSize}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+
+            <TextBlock Text="До :"
+               Foreground="Black"
+               FontSize="12"
+               FontWeight="Medium"
+               FontFamily="Montserrat"
+               VerticalAlignment="Center"
+               Margin="20,0,0,0"/>
+
+            <DatePicker 
+                SelectedDate="{Binding SecondDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+             FontSize="13"
+             FontWeight="Medium"
+             FontFamily="Montserrat"                            
+             Foreground="Black"
+             BorderBrush="Black"
+             BorderThickness="0,0,0,2"
+             Height="25"
+                Width="150"
+             VerticalContentAlignment="Center"
+            Margin="10,0,0,0">
+                <DatePicker.Resources>
+                    <Style TargetType="{x:Type DatePickerTextBox}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type DatePickerTextBox}">
+                                    <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=Text}"
+                                               Foreground="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=Foreground}"
+                                               TextAlignment="Left"
+                                               FontWeight="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontWeight}"
+                                               FontFamily="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontFamily}"
+                                               FontSize="{Binding RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}, Path=FontSize}"/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DatePicker.Resources>
+            </DatePicker>
+
+            <Button 
+                    Margin="30,0,0,0"
+                    Width="30"
+                    Height="30"
+                    Cursor="Hand"
+                    BorderThickness="0"
+    Command="{Binding RefreshDataCommand}">
+                <fa:IconImage Icon="Refresh" Height="20" Width="20" Foreground="White"/>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#773DFF"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Height="30"
+                                    Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#836EFB"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+        </StackPanel>
+
+
+        <lvc:PieChart Grid.Row="1" LegendLocation="Right" Width="300" Height="300" Series="{Binding SeriesCollection}" />
+    </Grid>
+</UserControl>

@@ -32,6 +32,10 @@
         <DataTemplate DataType="{x:Type viewModel:TreatmentProgramViewModel}">
             <local1:TreatmentProgramView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ReportViewModel}">
+            <local1:ReportView/>
+        </DataTemplate>
     </Window.Resources>
 
     <Border CornerRadius="10"
@@ -96,7 +100,8 @@
                     </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource color7}">
+                                 Tag="{StaticResource color7}"
+                                 Command="{Binding ShowReportViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="PieChart" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Отчет" Style="{StaticResource menuButtonText}"/>
@@ -105,7 +110,7 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color14}"
-                                 Command="{Binding ShowRoomViewComand}">
+                                 Command="{Binding ShowRoomViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Bed" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Комнаты" Style="{StaticResource menuButtonText}"/>
@@ -114,7 +119,7 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color6}"
-                                 Command="{Binding ShowTreatmentProgramsViewComand}">
+                                 Command="{Binding ShowTreatmentProgramsViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="HouseMedical" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Программы лечения" Style="{StaticResource menuButtonText}"/>

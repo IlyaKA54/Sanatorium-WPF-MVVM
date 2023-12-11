@@ -225,46 +225,66 @@
 
                     <GridSplitter Grid.Column="1" Grid.Row="1" Background="Black" Width="1"/>
 
-                    <ItemsControl Grid.Column="0" Grid.Row="1" ItemsSource="{Binding AllCustomers}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="Black" BorderThickness="1" Margin="0" Padding="10">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="30"/>
+                        <ItemsControl Grid.Column="0" Grid.Row="1" ItemsSource="{Binding AllCustomers}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0" Padding="10">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
 
-                                        </Grid.ColumnDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="30"/>
 
-                                        <TextBlock Grid.Column="0" Text="{Binding SecondName}" VerticalAlignment="Center" Margin="5"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding FirstName}" VerticalAlignment="Center" Margin="5"/>
-                                        <TextBlock Grid.Column="2" Text="{Binding Surname}" VerticalAlignment="Center" Margin="5"/>
+                                            </Grid.ColumnDefinitions>
 
-
-
-                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding BirthDate, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
-                                        <Button Grid.Column="3" Grid.Row="1" Width="30" Height="30" VerticalAlignment="Center"
-                        Command="{Binding DataContext.MoveACustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                        CommandParameter="{Binding}"/>
+                                            <TextBlock Grid.Column="0" Text="{Binding SecondName}" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding FirstName}" VerticalAlignment="Center" Margin="5"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding Surname}" VerticalAlignment="Center" Margin="5"/>
 
 
-                                        <!-- Ряд с номером телефона -->
-                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Phone}" VerticalAlignment="Center"/>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
 
-                    <ItemsControl Grid.Column="2" Grid.Row="1" ItemsSource="{Binding SelectedCustomers}">
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding BirthDate, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
+                                            <Button Grid.Column="3" Grid.Row="1" Width="30" Height="30" VerticalAlignment="Center"
+                                                Command="{Binding DataContext.MoveACustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}" Background="#00FF00">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="15">
+                                                                        <!-- Половина высоты (или ширины) кнопки -->
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+
+                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Phone}" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+
+                        <ItemsControl Grid.Column="2" Grid.Row="1" ItemsSource="{Binding SelectedCustomers}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderBrush="Black" BorderThickness="1" Margin="0" Padding="10">
@@ -290,12 +310,31 @@
 
 
                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding BirthDate, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center" />
-                                            <Button Grid.Column="3" Grid.Row="1" Width="30" Height="30" VerticalAlignment="Center"
+                                        <Button Grid.Column="3" Grid.Row="1" Width="30" Height="30" VerticalAlignment="Center"
                                                     Command="{Binding DataContext.MoveACustomerCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                    CommandParameter="{Binding}"/>
+                                                    CommandParameter="{Binding}"
+                                                    Background="Red">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}" 
+                                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                                CornerRadius="15">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
 
 
-                                        <!-- Ряд с номером телефона -->
+
+
                                         <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding Phone}" VerticalAlignment="Center"/>
                                     </Grid>
                                 </Border>
@@ -304,7 +343,8 @@
 
 
                         </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ItemsControl>
+                    </ScrollViewer>
 
 
                 </Grid>

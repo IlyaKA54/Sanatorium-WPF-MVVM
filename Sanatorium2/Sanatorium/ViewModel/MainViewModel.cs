@@ -56,15 +56,26 @@ namespace Sanatorium.ViewModel
 
         public ICommand ShowCustomerViewCommand { get; }
 
-        public ICommand ShowRoomViewComand { get; }
-        public ICommand ShowTreatmentProgramsViewComand { get; }
+        public ICommand ShowRoomViewCommand { get; }
+        public ICommand ShowTreatmentProgramsViewCommand { get; }
+        public ICommand ShowReportViewCommand { get; }
 
         public MainViewModel()
         {
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowCustomerViewCommand = new ViewModelCommand(ExecuteShowCustomerViewCommand);
-            ShowRoomViewComand = new ViewModelCommand(ExecuteShowRoomViewCommand);
-            ShowTreatmentProgramsViewComand = new ViewModelCommand(ExecuteShowTreatmentProgramViewCommand);
+            ShowRoomViewCommand = new ViewModelCommand(ExecuteShowRoomViewCommand);
+            ShowTreatmentProgramsViewCommand = new ViewModelCommand(ExecuteShowTreatmentProgramViewCommand);
+            ShowReportViewCommand = new ViewModelCommand(ExecuteShowReportViewCommand);
+
+            ExecuteShowHomeViewCommand(new object());
+        }
+
+        private void ExecuteShowReportViewCommand(object obj)
+        {
+            CurrentChildView = new ReportViewModel();
+            Caption = "Отчет";
+            Icon = IconChar.PieChart;
         }
 
         private void ExecuteShowTreatmentProgramViewCommand(object obj)

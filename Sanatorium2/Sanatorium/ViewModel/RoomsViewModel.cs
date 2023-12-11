@@ -63,6 +63,8 @@ namespace Sanatorium.ViewModel
         public ICommand ShowAddRoomCommand { get; private set; }
 
         public ICommand ShowEditWindowCommand { get; private set; }
+
+        public ICommand ChangeStatusCommand {  get; private set; }
         public RoomsViewModel()
         {
             _rooms = new ObservableCollection<Room>();
@@ -71,9 +73,38 @@ namespace Sanatorium.ViewModel
 
             ShowAddRoomCommand = new ViewModelCommand(ExecuteShowAddRoomWindowCommand);
             ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
+            ChangeStatusCommand = new ViewModelCommand(ExecuteChangeStatusCommand);
+
 
             LoadRooms();
             _types = new ObservableCollection<string>(_types.Concat(LoadTypesOfRoom()));
+        }
+
+        private void ExecuteChangeStatusCommand(object obj)
+        {
+            if(obj is Room room)
+            {
+                using (var context = new SanatoriumContext()) 
+                {
+                    var roomFromDatabase = context.Rooms.Include(r => r.Status).FirstOrDefault(r => r.Id == room.Id);
+
+                    if (roomFromDatabase != null)
+                    {
+                        if (roomFromDatabase.Status.Name == "Готов")
+                        {
+                            roomFromDatabase.Status = context.RoomStatuses.Single(s => s.Name == "Уборка");
+                        }
+                        else if (roomFromDatabase.Status.Name == "Уборка")
+                        {
+                            roomFromDatabase.Status = context.RoomStatuses.Single(s => s.Name == "Готов");
+                        }
+
+                        context.SaveChanges();
+                    }
+                }
+            }
+
+            LoadRooms();
         }
 
         private void ExecuteShowEditWindowCommand(object obj)
@@ -141,7 +172,7 @@ namespace Sanatorium.ViewModel
             using (var context = new SanatoriumContext())
             {
                 if(str == null || str == _types[0])
-                    Rooms = new ObservableCollection<Room>(context.Rooms.Include(a => a.Type).ToList());
+                    Rooms = new ObservableCollection<Room>(context.Rooms.Include(a => a.Type).Include(a => a.Status).ToList());
                 else
                     Rooms = new ObservableCollection<Room>(context.Rooms.Where(r => r.Type.Type == str));
             }

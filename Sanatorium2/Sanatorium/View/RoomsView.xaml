@@ -69,12 +69,33 @@
                             </Border.Background>
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                                    <Button Width="10" Height="10" Margin="0,0,5,20" 
+                                        VerticalAlignment="Top"
+                                        Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                        CommandParameter="{Binding}">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status.Name}" Value="Готов">
+                                                        <Setter Property="Background" Value="Green"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding Status.Name}" Value="Уборка">
+                                                        <Setter Property="Background" Value="Yellow"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <fa:IconImage Icon="Broom" Foreground="White"/>
+                                    </Button>
+
                                     <Button Width="10" Height="10" Margin="10,0,5,20" Background="Blue" 
                                             VerticalAlignment="Top"
                                             Command="{Binding DataContext.ShowEditWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}">
                                         <fa:IconImage Icon="Pen" Foreground="White"/>
                                     </Button>
+                                    
                                 </StackPanel>
                                 <TextBlock Text="{Binding Name}" FontSize="18"/>
                                 <TextBlock Text="{Binding Price, StringFormat='₽{0:N2}'}" Foreground="Black" FontWeight="Bold"/>

@@ -29,7 +29,8 @@
                             BorderThickness="0"
                             Foreground="White"
                             VerticalAlignment="Top"
-                            Command="{Binding Show}">
+                            Command="{Binding ShowCustomerSelectionCommand}"
+                    Margin="0,5,5,0">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Background" Value="#773DFF"/>
@@ -54,6 +55,45 @@
                 </Button.Style>
             </Button>
         </Grid>
-        
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ItemsControl Grid.Row="1" ItemsSource="{Binding Orders}" >
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Black" BorderThickness="1" Margin="0" Padding="10">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="30"/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="{Binding IdOrder.ArrivalDate, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding IdOrder.DateOfDeparture, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding IdOrder.Price, StringFormat=C }" xml:lang="ru-RU" VerticalAlignment="Center" />
+                                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
+                                    <Run Text="Комната: "/>
+                                    <Run Text="{Binding Room.Name}"/>
+                                </TextBlock>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+
+
+
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

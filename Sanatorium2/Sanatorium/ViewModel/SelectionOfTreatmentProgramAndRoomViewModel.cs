@@ -131,6 +131,7 @@ namespace Sanatorium.ViewModel
             }
 
             SaveCustomerOrders();
+            Close?.Invoke();
         }
 
         private void SaveCustomerOrders()
@@ -141,10 +142,19 @@ namespace Sanatorium.ViewModel
 
                 foreach (var customer in _customers)
                 {
-                    customer.IdOrder = last;
-                    context.CustomerOrders.Add(customer);
-                    context.SaveChanges();
+                    var newCustomerOrder = new CustomerOrder
+                    {
+                        Customer = context.Customers.FirstOrDefault(t => t.Id == customer.Customer.Id),
+                        Room = context.Rooms.FirstOrDefault(t => t.Id == customer.Room.Id),
+                        TreatmentProgram = context.TreatmentPrograms.FirstOrDefault(t => t.Id == customer.TreatmentProgram.Id),
+                        IdOrder = context.Orders.FirstOrDefault(t => t.Id == last.Id)
+                    };
+
+                    context.CustomerOrders.Add(newCustomerOrder);
+                    
                 }
+
+                context.SaveChanges();
 
             }
         }

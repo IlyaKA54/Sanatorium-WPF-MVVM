@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
+using Sanatorium.Model.Entities;
 using System.Net;
 
 namespace Sanatorium.Model.Repositories;

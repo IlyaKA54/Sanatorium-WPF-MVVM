@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:Sanatorium.ViewModel"
-        xmlns:local="clr-namespace:Sanatorium"
+        xmlns:local="clr-namespace:Sanatorium.ViewModel"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
         xmlns:local1="clr-namespace:Sanatorium.View"
         mc:Ignorable="d"
@@ -12,9 +12,6 @@
         AllowsTransparency="true" WindowStyle="None"  WindowStartupLocation="CenterScreen" 
         ResizeMode="CanResize">
 
-    <Window.DataContext>
-        <viewModel:MainViewModel/>
-    </Window.DataContext>
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
@@ -36,6 +33,9 @@
         <DataTemplate DataType="{x:Type viewModel:ReportViewModel}">
             <local1:ReportView/>
         </DataTemplate>
+
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
     </Window.Resources>
 
     <Border CornerRadius="10"
@@ -83,7 +83,8 @@
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color1}"
                                  IsChecked="True"
-                                 Command="{Binding ShowHomeViewCommand}">
+                                 Command="{Binding ShowHomeViewCommand}"
+                                 Visibility="{Binding User.IsHomeButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Home" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Главная" Style="{StaticResource menuButtonText}"/>
@@ -92,7 +93,8 @@
                     
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color2}"
-                                 Command="{Binding ShowCustomerViewCommand}">
+                                 Command="{Binding ShowCustomerViewCommand}"
+                                 Visibility="{Binding User.IsCustomerButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="UserGroup" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Клиенты" Style="{StaticResource menuButtonText}"/>
@@ -101,7 +103,8 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color7}"
-                                 Command="{Binding ShowReportViewCommand}">
+                                 Command="{Binding ShowReportViewCommand}"
+                                 Visibility="{Binding User.IsReportButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="PieChart" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Отчет" Style="{StaticResource menuButtonText}"/>
@@ -110,7 +113,8 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color14}"
-                                 Command="{Binding ShowRoomViewCommand}">
+                                 Command="{Binding ShowRoomViewCommand}"
+                                 Visibility="{Binding User.IsRoomButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="Bed" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Комнаты" Style="{StaticResource menuButtonText}"/>
@@ -119,15 +123,13 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource color6}"
-                                 Command="{Binding ShowTreatmentProgramsViewCommand}">
+                                 Command="{Binding ShowTreatmentProgramsViewCommand}"
+                                 Visibility="{Binding User.IsTreatmentProgramsButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="HouseMedical" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Программы лечения" Style="{StaticResource menuButtonText}"/>
                         </StackPanel>
                     </RadioButton>
-
-
-
                 </StackPanel>
 
             </Border>

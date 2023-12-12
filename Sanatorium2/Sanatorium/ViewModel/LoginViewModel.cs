@@ -4,6 +4,8 @@ using System.Net;
 using System.Threading;
 using System.Security.Principal;
 using Sanatorium.Model.Repositories;
+using System;
+using Sanatorium.Users;
 
 namespace Sanatorium.ViewModel;
 
@@ -69,6 +71,8 @@ public class LoginViewModel : ViewModelBase
 
     public ICommand LoginCommand { get; private set; }
 
+    public Action Close;
+
     public LoginViewModel(IUserRepository userRepository)
     {
         _userRepository = userRepository;
@@ -91,16 +95,35 @@ public class LoginViewModel : ViewModelBase
     private void ExecuteLoginCommand(object obj)
     {
         var isValidUser = _userRepository.AuthenticateUser(new NetworkCredential(Username, Password));
+        User user;
 
         if(isValidUser)
         {
             Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(Username), null);
-            IsViewVisible = false;
+            user = GetUser();
+            var mainView = new MainWindow { DataContext = new MainViewModel(user) };
+            mainView.Show();
+            Close?.Invoke();
         }
 
         else
         {
             ErrorMessage = "* Неправильное имя пользователя или пароль";
+        }
+    }
+
+    private User GetUser()
+    {
+        switch (Username)
+        {
+            case "admin":
+                return new Admin();
+            case "recept":
+                return new Receptionist();
+            case "clean":
+                return new Cleaner();
+            default:
+                return null;
         }
     }
 }

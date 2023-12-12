@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Sanatorium.ViewModel;
+using System.Security.Policy;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Sanatorium.View;
@@ -26,8 +28,9 @@ public partial class LoginView : Window
         Application.Current.Shutdown();
     }
 
-    private void OnButtonLoginClick(object sender, RoutedEventArgs e)
+    public void SetDataContext(LoginViewModel viewModel)
     {
-
+        viewModel.Close += this.Close;
+        DataContext = viewModel;
     }
 }

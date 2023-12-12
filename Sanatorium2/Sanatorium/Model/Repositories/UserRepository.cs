@@ -1,4 +1,6 @@
-﻿using Sanatorium.Model.Data;
+﻿using Sanatorium.Model;
+using Sanatorium.Model.Data;
+using Sanatorium.Model.Entities;
 using System.Linq;
 using System.Net;
 
@@ -17,4 +19,6 @@ public class UserRepository : IUserRepository
             return user != null;
         }
     }
+
+
 }

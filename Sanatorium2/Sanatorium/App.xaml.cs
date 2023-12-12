@@ -11,24 +11,14 @@ namespace Sanatorium
         private IKernel _kernel;
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
+            _kernel = new StandardKernel(new MyNinjectModule());
 
-            var mainView = new MainWindow();
-            mainView.Show();
+            var loginVM = _kernel.Get<LoginViewModel>();
+            var loginView = new LoginView ();
+            loginView.SetDataContext(loginVM);
 
-            //_kernel = new StandardKernel(new MyNinjectModule());
+            loginView.Show();
 
-            //var loginVM = _kernel.Get<LoginViewModel>();
-            //var loginView = new LoginView { DataContext = loginVM};
-
-            //loginView.Show();
-            //loginView.IsVisibleChanged += (s, ev) =>
-            //{
-            //    if (!loginView.IsVisible && loginView.IsLoaded)
-            //    {
-            //        var mainView = new MainWindow();
-            //        mainView.Show();
-            //    }
-            //};
         }
     }
 }

@@ -99,7 +99,7 @@ public class LoginViewModel : ViewModelBase
 
         if(isValidUser)
         {
-            Thread.CurrentPrincipal = new GenericPrincipal(new GenericIdentity(Username), null);
+            
             user = GetUser();
             var mainView = new MainWindow { DataContext = new MainViewModel(user) };
             mainView.Show();

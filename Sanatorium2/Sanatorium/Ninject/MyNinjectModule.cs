@@ -1,5 +1,6 @@
 ﻿using Ninject.Modules;
 using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using System;
 
 namespace Sanatorium.Ninject
@@ -8,7 +9,7 @@ namespace Sanatorium.Ninject
     {
         public override void Load()
         {
-            Bind<IUserRepository>().To<UserRepository>();
+            Bind<IUserService>().To<UserService>();
         }
     }
 }

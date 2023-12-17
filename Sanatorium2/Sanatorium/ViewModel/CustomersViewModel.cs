@@ -52,8 +52,6 @@ namespace Sanatorium.ViewModel
         public ICommand RefreshCommand { get; private set; }
         public ICommand DeleteCustomerCommand { get; private set; }
 
-        public ICommand SelectACustomerCommand { get; private set; }
-        public ICommand UnselectACustomerCommand { get; private set; }
         public CustomersViewModel()
         {
             Customers = new ObservableCollection<Customer>();
@@ -63,30 +61,8 @@ namespace Sanatorium.ViewModel
             RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
             DeleteCustomerCommand = new ViewModelCommand(ExecuteDeleteCustomerCommand);
             ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
-            SelectACustomerCommand = new ViewModelCommand(ExecuteAddSelectedCustomerCommand);
-            UnselectACustomerCommand = new ViewModelCommand(ExecuteRemoveSelectedCustomerCommand);
 
             LoadCustomers();
-        }
-
-        private void ExecuteRemoveSelectedCustomerCommand(object obj)
-        {
-            if (obj is Customer customer)
-                if (!_selectedCustomers.Contains(customer))
-                    _selectedCustomers.Add(customer);
-                else
-                    _selectedCustomers.Add(customer);
-
-        }
-
-        private void ExecuteAddSelectedCustomerCommand(object obj)
-        {
-            if(obj is Customer customer)
-                if (!_selectedCustomers.Contains(customer))
-                    _selectedCustomers.Add(customer);
-                else
-                    _selectedCustomers.Add(customer);
-
         }
 
         private void ExecuteRefreshCommand(object obj)

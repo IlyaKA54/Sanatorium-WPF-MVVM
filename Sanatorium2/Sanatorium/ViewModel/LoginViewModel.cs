@@ -3,9 +3,10 @@ using System.Windows.Input;
 using System.Net;
 using System.Threading;
 using System.Security.Principal;
-using Sanatorium.Model.Repositories;
 using System;
 using Sanatorium.Users;
+using Sanatorium.Model.Repositories.Interface;
+using Sanatorium.Model.Repositories;
 
 namespace Sanatorium.ViewModel;
 
@@ -15,7 +16,8 @@ public class LoginViewModel : ViewModelBase
     private string _password;
     private string _errorMessage;
     private bool _isViewVisible = true;
-    private IUserRepository _userRepository;
+    private IUserService _userRepository;
+    private IDbRepos _dbRepos;
 
     public string Username
     {
@@ -73,9 +75,10 @@ public class LoginViewModel : ViewModelBase
 
     public Action Close;
 
-    public LoginViewModel(IUserRepository userRepository)
+    public LoginViewModel()
     {
-        _userRepository = userRepository;
+        _dbRepos = new DbEFRepos();
+        _userRepository = new UserService(_dbRepos);
         LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
 
     }
@@ -94,12 +97,11 @@ public class LoginViewModel : ViewModelBase
 
     private void ExecuteLoginCommand(object obj)
     {
-        var isValidUser = _userRepository.AuthenticateUser(new NetworkCredential(Username, Password));
+        var isValidUser = _userRepository.AuthenticateUser(Username, Password);
         User user;
 
         if(isValidUser)
         {
-            
             user = GetUser();
             var mainView = new MainWindow { DataContext = new MainViewModel(user) };
             mainView.Show();

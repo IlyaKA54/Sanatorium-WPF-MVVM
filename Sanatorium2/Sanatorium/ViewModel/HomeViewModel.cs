@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Sanatorium.Model.Data;
-using Sanatorium.Model.Entities;
+﻿using Sanatorium.Model.Entities;
 using Sanatorium.Model.Repositories;
 using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.View;

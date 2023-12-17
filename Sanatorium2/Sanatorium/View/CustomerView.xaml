@@ -151,8 +151,14 @@
                                         </Button>
                                     </Grid>
 
-                                    <TextBlock Grid.Row="1" Text="{Binding BirthDate}"/>
-                                    <TextBlock Grid.Row="2" Text="{Binding Phone}"/>
+                                    <TextBlock Grid.Row="1">
+                                        <Run Text="Дата рождения: "/>
+                                        <Run Text="{Binding BirthDate,StringFormat='dd.MM.yyyy'}"/>
+                                    </TextBlock>
+                                    <TextBlock Grid.Row="2">
+                                        <Run Text="Номер телефона: "/>
+                                        <Run Text="{Binding Phone}"/>
+                                    </TextBlock>
                                 </Grid>
                             </Grid>
                         </Border>

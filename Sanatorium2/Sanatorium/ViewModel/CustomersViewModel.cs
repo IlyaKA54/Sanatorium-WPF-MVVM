@@ -1,145 +1,135 @@
 ﻿using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
-namespace Sanatorium.ViewModel
+namespace Sanatorium.ViewModel;
+
+public class CustomersViewModel : ViewModelBase
 {
-    public class CustomersViewModel : ViewModelBase
+    private ObservableCollection<Customer> _customers;
+    private Window _activeWindow;
+    private string? _searchText;
+
+    private IDbRepos _repos;
+    private ObservableCollection<Customer> _selectedCustomers;
+
+    public ObservableCollection<Customer> Customers
     {
-        private ObservableCollection<Customer> _customers;
-        private AdditionCustomerView _activeAdditionalCustomerView;
-        private EditingACustomerView _activeEditingACustomerView;
-        private string? _searchText;
-
-        private ObservableCollection<Customer> _selectedCustomers;
-
-        public ObservableCollection<Customer> Customers
+        get
         {
-            get
-            {
-                return _customers;
-            }
-            set
-            {
-                _customers = value;
-                OnPropertyChanged();
-            }
+            return _customers;
+        }
+        set
+        {
+            _customers = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public string? SearchText
+    {
+        get
+        {
+            return _searchText;
         }
 
-        public string? SearchText
+        set
         {
-            get
-            {
-                return _searchText;
-            }
+            _searchText = value;
+            OnPropertyChanged();
+        }
+    }
 
-            set
+    public ICommand ShowAdditionalWindowCommand { get; private set; }
+    public ICommand ShowEditWindowCommand { get; private set; }
+    public ICommand RefreshCommand { get; private set; }
+    public ICommand DeleteCustomerCommand { get; private set; }
+
+    public CustomersViewModel()
+    {
+        _selectedCustomers = new ObservableCollection<Customer>();
+
+        ShowAdditionalWindowCommand = new ViewModelCommand(ExecuteShowAdditionalWindowCommand);
+        RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
+        DeleteCustomerCommand = new ViewModelCommand(ExecuteDeleteCustomerCommand);
+        ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
+
+        LoadCustomers();
+    }
+
+    private void ExecuteRefreshCommand(object obj)
+    {
+        LoadCustomers(_searchText);
+    }
+
+    private void ExecuteShowAdditionalWindowCommand(object obg)
+    {
+        if (_activeWindow == null || _activeWindow.DataContext == null)
+        {
+            _activeWindow = new AdditionCustomerView();
+            (_activeWindow.DataContext as AdditionCustomerViewModel).Close += CloseWindow;
+            _activeWindow.Show();
+        }
+    }
+
+    private void ExecuteShowEditWindowCommand(object obj)
+    {
+        if (obj is Customer customer)
+        {
+            if (_activeWindow == null || _activeWindow.DataContext == null)
             {
-                _searchText = value;
-                OnPropertyChanged();
+                var editViewModel = new EditingACustomerViewModel(customer);
+
+                editViewModel.Close += CloseWindow;
+
+                _activeWindow = new EditingACustomerView
+                {
+                    DataContext = editViewModel
+                };
+
+                _activeWindow.Show();
             }
         }
+    }
 
-        public ICommand ShowAdditionalWindowCommand { get; private set; }
-
-        public ICommand ShowEditWindowCommand { get; private set; }
-        public ICommand RefreshCommand { get; private set; }
-        public ICommand DeleteCustomerCommand { get; private set; }
-
-        public CustomersViewModel()
+    private void ExecuteDeleteCustomerCommand(object parameter)
+    {
+        if (parameter is Customer customerToRemove)
         {
-            Customers = new ObservableCollection<Customer>();
-            _selectedCustomers = new ObservableCollection<Customer>();
+            Customers.Remove(customerToRemove);
+            _repos.Customers.Delete(customerToRemove);
 
-            ShowAdditionalWindowCommand = new ViewModelCommand(ExecuteShowAdditionalWindowCommand);
-            RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
-            DeleteCustomerCommand = new ViewModelCommand(ExecuteDeleteCustomerCommand);
-            ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
+            _repos.Save();
 
             LoadCustomers();
         }
-
-        private void ExecuteRefreshCommand(object obj)
+    }
+    private void CloseWindow()
+    {
+        if (_activeWindow != null)
         {
-            LoadCustomers(_searchText);
+            _activeWindow.Close();
+            _activeWindow = null;
+            LoadCustomers();
         }
+    }
 
-        private void ExecuteShowAdditionalWindowCommand(object obg)
-        {
-            if (_activeAdditionalCustomerView == null || _activeAdditionalCustomerView.DataContext == null)
-            {
-                _activeAdditionalCustomerView = new AdditionCustomerView();
-                (_activeAdditionalCustomerView.DataContext as AdditionCustomerViewModel).Close += CloseAdditionalCustomerWindow;
-                _activeAdditionalCustomerView.Show();
-            }
-        }
+    private void LoadCustomers(string? str = null)
+    {
+        _repos = new DbEFRepos();
 
-        private void ExecuteShowEditWindowCommand(object obj)
-        {
-            if(obj is Customer customer)
-            {
-                if (_activeEditingACustomerView == null || _activeEditingACustomerView.DataContext == null)
-                {
-                    var editViewModel = new EditingACustomerViewModel(customer);
+        if (string.IsNullOrEmpty(str))
+            Customers = new ObservableCollection<Customer>(_repos.Customers.GetCollection());
+        else
+            Customers = new ObservableCollection<Customer>(_repos.Customers.GetCollection().Where(c => c.SecondName.StartsWith(str) ||
+            c.Surname.StartsWith(str) || c.FirstName.StartsWith(str) || c.Phone.StartsWith(str)).ToList());
 
-                    editViewModel.Close += CloseEditingACustomerView;
-
-                    _activeEditingACustomerView = new EditingACustomerView
-                    {
-                        DataContext = editViewModel
-                    };
-
-                    _activeEditingACustomerView.Show();
-                }
-            }
-        }
-
-        private void ExecuteDeleteCustomerCommand(object parameter)
-        {
-            if (parameter is Customer customerToRemove)
-            {
-                Customers.Remove(customerToRemove);
-
-                using (var context = new SanatoriumContext())
-                {
-                    context.Customers.Remove(customerToRemove);
-                    context.SaveChanges();
-                }
-            }
-        }
-        private void CloseAdditionalCustomerWindow()
-        {
-            if(_activeAdditionalCustomerView != null)
-            {
-                _activeAdditionalCustomerView.Close();
-                _activeAdditionalCustomerView = null;
-            }
-        }
-
-        private void CloseEditingACustomerView()
-        {
-            if(_activeEditingACustomerView != null)
-            {
-                _activeEditingACustomerView.Close();
-                _activeEditingACustomerView = null;
-            }
-        }
-        private void LoadCustomers(string? str = null)
-        {
-            using (var context = new SanatoriumContext())
-            {
-                if (string.IsNullOrEmpty(str))
-                    Customers = new ObservableCollection<Customer>(context.Customers.ToList());
-                else
-                    Customers = new ObservableCollection<Customer>(context.Customers.Where(c => c.SecondName.StartsWith(str) || 
-                    c.Surname.StartsWith(str) || c.FirstName.StartsWith(str) || c.Phone.StartsWith(str)).ToList());
-            }
-        }
     }
 }

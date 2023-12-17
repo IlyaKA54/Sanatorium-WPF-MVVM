@@ -37,10 +37,10 @@ public class DbEFRepos : IDbRepos
     {
         get
         {
-            if(_roomRepository == null )
-                _roomRepository = new RoomRepository( _context );
+            if (_roomRepository == null)
+                _roomRepository = new RoomRepository(_context);
 
-            return _roomRepository;
+            return new RoomRepository(_context);
         }
     }
 
@@ -77,7 +77,7 @@ public class DbEFRepos : IDbRepos
         }
     }
 
-    public IRepository<TreatmentProgram> Programs
+    public IRepository<TreatmentProgram> TreatmentPrograms
     {
         get
         {

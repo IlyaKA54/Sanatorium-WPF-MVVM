@@ -10,7 +10,7 @@ public interface IDbRepos
     IRepository<RoomStatus> Statuses { get; }
     IRepository<User> Users { get; }
     IRepository<Order> Orders { get; }
-    IRepository<TreatmentProgram> Programs { get; }
+    IRepository<TreatmentProgram> TreatmentPrograms { get; }
     IRepository<CustomerOrder> CustomerOrders { get; }
 
     void Save();

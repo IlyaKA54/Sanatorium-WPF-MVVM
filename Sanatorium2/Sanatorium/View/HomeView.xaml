@@ -22,7 +22,7 @@
 
             </StackPanel>
             <Button Grid.Column="1"                         
-                            Content="Добавить"                            
+                            Content="Заселить"                            
                             FontSize="12"
                             FontFamily="Montserrat"
                             Cursor="Hand"
@@ -76,10 +76,19 @@
 
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding IdOrder.ArrivalDate, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding IdOrder.DateOfDeparture, StringFormat='dd.MM.yyyy'}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                                    <Run Text="Дата заезда: "/>
+                                    <Run Text="{Binding IdOrder.ArrivalDate,StringFormat='dd.MM.yyyy'}"/>
+                                </TextBlock>
+                                <TextBlock Grid.Column="1" VerticalAlignment="Center">
+                                    <Run Text="Дата выезды: "/>
+                                    <Run Text="{Binding IdOrder.DateOfDeparture,StringFormat='dd.MM.yyyy'}"/>
+                                </TextBlock>
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding IdOrder.Price, StringFormat=C }" xml:lang="ru-RU" VerticalAlignment="Center" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
+                                    <Run Text="Итог: "/>
+                                    <Run Text="{Binding IdOrder.Price, StringFormat=C }" xml:lang="ru-RU"/>
+                                </TextBlock>
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
                                     <Run Text="Комната: "/>
                                     <Run Text="{Binding Room.Name}"/>

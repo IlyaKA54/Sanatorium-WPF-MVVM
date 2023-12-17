@@ -32,16 +32,17 @@ public class CustomerOrderRepository : IRepository<CustomerOrder>
             .Include(a => a.Customer)
             .Include(a => a.IdOrder)
             .Include(a => a.TreatmentProgram)
+            .Include(a => a.Room)
             .ToList());
     }
 
     public CustomerOrder GetItem(int id)
     {
         return _context.CustomerOrders
-            .Include(a => a.Room)
             .Include(a => a.Customer)
             .Include(a => a.IdOrder)
             .Include(a => a.TreatmentProgram)
+            .Include(a => a.Room)
             .FirstOrDefault(a => a.Id == id);
     }   
 

@@ -1,11 +1,12 @@
 ﻿using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Sanatorium.ViewModel;
@@ -15,9 +16,8 @@ class TreatmentProgramViewModel : ViewModelBase
     private ObservableCollection<TreatmentProgram> _programs;
     private string? _searchText;
 
-    private AdditionTreatmentProgramView _currentAdditionTreatmentProgramViewModel;
-    private EditingATreatmentProgramView _activeEditingATreatmentProgramView;
-
+    private Window _currentActiveWindow;
+    private IDbRepos _repos;
     public string? SearchText
     {
         get
@@ -51,8 +51,6 @@ class TreatmentProgramViewModel : ViewModelBase
     public ICommand DeleteTreatmentProgramCommand { get; private set; }
     public TreatmentProgramViewModel()
     {
-        _programs = new ObservableCollection<TreatmentProgram>();
-
         ShowAddTreatmentProgramCommand = new ViewModelCommand(ExecuteShowTreatmentProgramCommand);
         RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
         DeleteTreatmentProgramCommand = new ViewModelCommand(ExecuteDeleteTreatmentProgramCommand);
@@ -65,43 +63,31 @@ class TreatmentProgramViewModel : ViewModelBase
     {
         if (obj is TreatmentProgram program)
         {
-            if (_activeEditingATreatmentProgramView == null || _activeEditingATreatmentProgramView.DataContext == null)
+            if (_currentActiveWindow == null || _currentActiveWindow.DataContext == null)
             {
                 var editViewModel = new EditingATreatmentProgramViewModel(program);
 
-                editViewModel.Close += CloseEditingATreatmentProgramView;
+                editViewModel.Close += CloseWindow;
 
-                _activeEditingATreatmentProgramView = new EditingATreatmentProgramView
+                _currentActiveWindow = new EditingATreatmentProgramView
                 {
                     DataContext = editViewModel
                 };
 
-                _activeEditingATreatmentProgramView.Show();
+                _currentActiveWindow.Show();
             }
         }
     }
 
-    private void CloseEditingATreatmentProgramView()
-    {
-        if (_activeEditingATreatmentProgramView != null)
-        {
-            _activeEditingATreatmentProgramView.Close();
-            _activeEditingATreatmentProgramView = null;
-            LoadTreatmentPrograms();
-        }
-    }
 
     private void ExecuteDeleteTreatmentProgramCommand(object obj)
     {
         if (obj is TreatmentProgram programToRemove)
         {
             Programs.Remove(programToRemove);
+            _repos.TreatmentPrograms.Delete(programToRemove);
 
-            using (var context = new SanatoriumContext())
-            {
-                context.TreatmentPrograms.Remove(programToRemove);
-                context.SaveChanges();
-            }
+            _repos.Save();
         }
     }
 
@@ -112,33 +98,32 @@ class TreatmentProgramViewModel : ViewModelBase
 
     private void ExecuteShowTreatmentProgramCommand(object obj)
     {
-        if (_currentAdditionTreatmentProgramViewModel == null)
+        if (_currentActiveWindow == null)
         {
-            _currentAdditionTreatmentProgramViewModel = new AdditionTreatmentProgramView();
-            (_currentAdditionTreatmentProgramViewModel.DataContext as AdditionTreatmentProgramViewModel).Close += CloseAdditionalTreatmnetProgramWindow;
-            _currentAdditionTreatmentProgramViewModel.Show();
+            _currentActiveWindow = new AdditionTreatmentProgramView();
+            (_currentActiveWindow.DataContext as AdditionTreatmentProgramViewModel).Close += CloseWindow;
+            _currentActiveWindow.Show();
         }
     }
 
-    private void CloseAdditionalTreatmnetProgramWindow()
+    private void CloseWindow()
     {
-        if (_currentAdditionTreatmentProgramViewModel != null)
+        if (_currentActiveWindow != null)
         {
-            _currentAdditionTreatmentProgramViewModel?.Close();
-            _currentAdditionTreatmentProgramViewModel = null;
+            _currentActiveWindow?.Close();
+            _currentActiveWindow = null;
             LoadTreatmentPrograms();
         }
     }
 
     private void LoadTreatmentPrograms(string str = null)
     {
-        using (var context = new SanatoriumContext())
-        {
-            if (str == null || string.IsNullOrEmpty(str))
-                Programs = new ObservableCollection<TreatmentProgram>(context.TreatmentPrograms.ToList());
-            else
-                Programs = new ObservableCollection<TreatmentProgram>(context.TreatmentPrograms.Where(c => c.Name.StartsWith(str)));
-        }
+        _repos = new DbEFRepos();
+
+        if (string.IsNullOrEmpty(str))
+            Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection());
+        else
+            Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection().Where(c => c.Name.StartsWith(str)));
     }
 
 }

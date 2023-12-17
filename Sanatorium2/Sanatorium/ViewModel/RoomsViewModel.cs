@@ -96,15 +96,11 @@ public class RoomsViewModel : ViewModelBase
             if (roomFromDatabase != null)
             {
                 if (room.Status.Name == "Готов")
-                {
                     roomFromDatabase.Status = _repos.Statuses.GetCollection().Single(s => s.Name == "Уборка");
-                }
                 else
-                {
                     roomFromDatabase.Status = _repos.Statuses.GetCollection().Single(s => s.Name == "Готов");
-                }
 
-                _repos.Save(); // Сохранение изменений
+                _repos.Save();
             }
         }
 

@@ -17,7 +17,7 @@ namespace Sanatorium.Model.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-6F52CNSF;Database=Sanatorium4;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("Server=DESKTOP-0899P0T\\SQLEXPRESS;Database=Sanatorium4;Trusted_Connection=True;TrustServerCertificate=True;");
         }
     }
 }

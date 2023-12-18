@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,6 +24,7 @@ public class EditingATreatmentProgramViewModel : ViewModelBase
     private string? _errorMessage;
 
     private string? _path;
+    private IDbRepos _repos;
 
     public string? Name
     {
@@ -94,6 +98,8 @@ public class EditingATreatmentProgramViewModel : ViewModelBase
 
         Init(_treatmentProgram);
 
+        _repos = new DbEFRepos();
+
         SaveChangesCommand = new ViewModelCommand(ExecuteSaveChangesCommand, CanExecuteSaveChangesCommand);
         EditImageCommand = new ViewModelCommand(ExecuteEditImageCommand);
         CancelCommand = new ViewModelCommand(ExecuteCancelCommand);
@@ -102,8 +108,9 @@ public class EditingATreatmentProgramViewModel : ViewModelBase
     private bool CanExecuteSaveChangesCommand(object obj)
     {
         bool validDate;
+        decimal parsedPrice;
 
-        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null || decimal.Parse(Price) <= 0)
+        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null || !decimal.TryParse(Price, out parsedPrice) || parsedPrice <= 0)
             validDate = false;
         else
             validDate = true;
@@ -131,24 +138,41 @@ public class EditingATreatmentProgramViewModel : ViewModelBase
 
     private void ExecuteSaveChangesCommand(object obj)
     {
-        using (var context = new SanatoriumContext())
+        if (CheckTreatmentProgram(_repos))
         {
-            var customerInDb = context.TreatmentPrograms.Find(_treatmentProgram.Id);
-
-            if (customerInDb != null)
-            {
-                customerInDb.Name = _name;
-                customerInDb.Description = _description;
-                customerInDb.Price = decimal.Parse(_price);
-
-                if (_path != null)
-                    customerInDb.Image = GetImageBytes();
-
-                context.SaveChanges();
-            }
+            ErrorMessage = "Программа с таким названием уже существует";
+            return;
         }
 
+        var treatmentProgramInDb = _repos.TreatmentPrograms.GetItem(_treatmentProgram.Id);
+
+        UpdateTreatmentProgram(treatmentProgramInDb);
+
         Close?.Invoke();
+    }
+
+    private void UpdateTreatmentProgram(TreatmentProgram treatmentProgramInDb)
+    {
+        if (treatmentProgramInDb != null)
+        {
+            treatmentProgramInDb.Name = _name;
+            treatmentProgramInDb.Description = _description;
+            treatmentProgramInDb.Price = decimal.Parse(_price);
+
+            if (_path != null)
+            {
+                treatmentProgramInDb.Image = GetImageBytes();
+            }
+
+            _repos.Save();
+        }
+    }
+
+    private bool CheckTreatmentProgram(IDbRepos repos)
+    {
+        var program = _repos.TreatmentPrograms.GetCollection().FirstOrDefault(a => a.Name == _name && a.Id != _treatmentProgram.Id);
+
+        return program != null;
     }
 
     private void Init(TreatmentProgram program)

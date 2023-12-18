@@ -47,7 +47,7 @@
 
 
                     <Button x:Name="btnClose"
-                            Click="btnClose_Click">
+                            Command="{Binding CloseCommand}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="Transparent"/>

@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -16,6 +19,7 @@ public class EditingACustomerViewModel : CustomerViewModelBase
 
     private string? _errorMessage;
     private string? _filePath = null;
+    private IDbRepos _repos;
 
     public string? ErrorMessage
     {
@@ -39,6 +43,7 @@ public class EditingACustomerViewModel : CustomerViewModelBase
     public EditingACustomerViewModel(Customer customerToEdit)
     {
         _customer = customerToEdit;
+        _repos = new DbEFRepos();
 
         Init(_customer);
 
@@ -108,24 +113,43 @@ public class EditingACustomerViewModel : CustomerViewModelBase
 
     private void ExecuteSaveChangesCommand(object obj)
     {
-        using (var context = new SanatoriumContext())
+        if (CheckCustomer(_repos))
         {
-            var customerInDb = context.Customers.Find(_customer.Id);
-
-            if (customerInDb != null)
-            {
-                customerInDb.FirstName = FirstName;
-                customerInDb.SecondName = SecondName;
-                customerInDb.Surname = Surname;
-                customerInDb.BirthDate = BirthDate;
-                customerInDb.Phone = Phone;
-                if(_filePath != null)
-                    customerInDb.Image = GetImageBytes();
-                context.SaveChanges();
-            }
+            ErrorMessage = "Такой клиент уже есть";
+            return;
         }
 
+        var customerInDb = _repos.Customers.GetItem(_customer.Id);
+
+        UpdateCustomer(customerInDb);
+
         Close?.Invoke();
+    }
+
+    private void UpdateCustomer(Customer customerInDb)
+    {
+        if (customerInDb != null)
+        {
+            customerInDb.FirstName = FirstName;
+            customerInDb.SecondName = SecondName;
+            customerInDb.Surname = Surname;
+            customerInDb.BirthDate = BirthDate;
+            customerInDb.Phone = Phone;
+            if (_filePath != null)
+                customerInDb.Image = GetImageBytes();
+
+            _repos.Save();
+        }
+    }
+
+    private bool CheckCustomer(IDbRepos repos)
+    {
+        var customer = repos.Customers.GetCollection()
+            .FirstOrDefault(a => a.FirstName == FirstName &&
+            a.SecondName == SecondName && a.Surname == Surname &&
+            a.Phone == Phone && a.BirthDate == BirthDate && a.Id != _customer.Id);
+
+        return customer != null;
     }
 
     private byte[] GetImageBytes()

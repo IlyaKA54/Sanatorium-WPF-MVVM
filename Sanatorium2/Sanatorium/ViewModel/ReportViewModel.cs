@@ -1,7 +1,5 @@
 ﻿using LiveCharts;
 using LiveCharts.Wpf;
-using Microsoft.EntityFrameworkCore;
-using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
 using Sanatorium.Model.Repositories;
 using Sanatorium.Model.Repositories.Interface;
@@ -126,10 +124,10 @@ public class ReportViewModel : ViewModelBase
             if (!string.IsNullOrEmpty(programName))
             {
                 if (peopleCountByProgram.ContainsKey(programName))
-                    peopleCountByProgram[programName]++;  
+                    peopleCountByProgram[programName]++;
                 else
                     peopleCountByProgram[programName] = 1;
-                
+
             }
         }
 

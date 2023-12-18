@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -19,6 +22,7 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
     private string? _errorMessage;
 
     private string? _path;
+    private IDbRepos _repos;
 
     public string? Name
     {
@@ -92,6 +96,7 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
         AddProgramCommand = new ViewModelCommand(ExecuteAddProgramCommand, CanExecuteAddProgramCommand);
         UploadImageCommand = new ViewModelCommand(ExecuteUploadImageCommand);
         CloseWindowCommand = new ViewModelCommand(ExecuteCloseWindowCommand);
+        _repos = new DbEFRepos();
     }
 
     private void ExecuteCloseWindowCommand(object obj)
@@ -145,8 +150,9 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
     private bool CanExecuteAddProgramCommand(object obj)
     {
         bool validDate;
+        decimal parsedPrice;
 
-        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null || decimal.Parse(Price) <= 0)
+        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null || !decimal.TryParse(Price, out parsedPrice) || parsedPrice <= 0)
             validDate = false;
         else
             validDate = true;
@@ -156,11 +162,24 @@ class AdditionTreatmentProgramViewModel : ViewModelBase
 
     private void ExecuteAddProgramCommand(object obj)
     {
-        using (var context = new SanatoriumContext())
+        if(CheckTreatmentProgram(_repos)) 
         {
-            context.TreatmentPrograms.Add(GetTreamentProgramm());
-            context.SaveChanges();
-            Close?.Invoke();
+            ErrorMessage = "Программа с таким названием уже существует";
+            return;
         }
+
+        _repos.TreatmentPrograms.Create(GetTreamentProgramm());
+
+        _repos.Save();
+
+        Close?.Invoke();
+
+    }
+
+    private bool CheckTreatmentProgram(IDbRepos repos)
+    {
+        var program = _repos.TreatmentPrograms.GetCollection().FirstOrDefault(a => a.Name == _name);
+
+        return program != null;
     }
 }

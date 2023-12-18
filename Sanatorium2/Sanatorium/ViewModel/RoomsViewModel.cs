@@ -18,7 +18,6 @@ public class RoomsViewModel : ViewModelBase
     private ObservableCollection<Room> _rooms;
 
     private Window _currentActiveWindow;
-    private EditingARoomView _activeEditingARoomView;
 
     private ObservableCollection<string> _types;
     private IDbRepos _repos;
@@ -105,13 +104,6 @@ public class RoomsViewModel : ViewModelBase
         }
 
         LoadRooms();
-    }
-
-    private int GetIdOfType(string str)
-    {
-        var type = _repos.Types.GetCollection().First(type => type.Type == str);
-
-        return type.Id;
     }
 
     private void ExecuteShowEditWindowCommand(object obj)

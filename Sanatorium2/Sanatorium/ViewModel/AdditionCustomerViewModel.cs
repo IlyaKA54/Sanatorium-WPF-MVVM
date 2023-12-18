@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -13,6 +16,7 @@ namespace Sanatorium.ViewModel
     {
         private string? _errorMessage;
         private string _filePath;
+        private IDbRepos _repos;
 
         public string? ErrorMessage
         {
@@ -38,6 +42,7 @@ namespace Sanatorium.ViewModel
             AddCommand = new ViewModelCommand(ExecuteAddCustomerCommand, CanExecuteAddCustomerCommand);
             UploadImageCommand = new ViewModelCommand(ExecuteUploadImageCommand);
             CloseCommand = new ViewModelCommand(ExecuteCloseCommand);
+            _repos = new DbEFRepos();
         }
 
         private void ExecuteCloseCommand(object obj) => Close?.Invoke();
@@ -75,14 +80,26 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteAddCustomerCommand(object obj)
         {
-            using (var context = new SanatoriumContext())
+            if(CheckCustomer(_repos))
             {
-                context.Customers.Add(GetNewCustomer());
-                context.SaveChanges();
+                ErrorMessage = "Такой клиент уже есть";
+                return;
             }
 
-            ExecuteCloseCommand(new object());
+            _repos.Customers.Create(GetNewCustomer());
+            _repos.Save();
 
+            Close?.Invoke();
+        }
+
+        private bool CheckCustomer(IDbRepos repos)
+        {
+            var customer = repos.Customers.GetCollection()
+                .FirstOrDefault(a => a.FirstName == FirstName && 
+                a.SecondName == SecondName && a.Surname == Surname && 
+                a.Phone == Phone && a.BirthDate == BirthDate);
+
+            return customer != null;
         }
 
         private Customer GetNewCustomer()

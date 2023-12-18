@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.Collections.ObjectModel;
@@ -24,6 +26,7 @@ public class AdditionRoomViewModel : ViewModelBase
     private string? _errorMessage;
 
     private string? _path;
+    private IDbRepos _repos;
 
     public ObservableCollection<string> Types
     {
@@ -135,10 +138,10 @@ public class AdditionRoomViewModel : ViewModelBase
     public Action Close;
     public AdditionRoomViewModel()
     {
-        _types = new ObservableCollection<string>();
         AddRoomCommand = new ViewModelCommand(ExecuteAddRoomCommand, CanExecuteAddRoomCommand);
         UploadImageCommand = new ViewModelCommand(ExecuteUploadImageCommand);
         CloseWindowCommand = new ViewModelCommand(ExecuteCloseWindowCommand);
+        _repos = new DbEFRepos();
         LoadTypesOfRoom();
     }
 
@@ -150,8 +153,12 @@ public class AdditionRoomViewModel : ViewModelBase
     private bool CanExecuteAddRoomCommand(object obj)
     {
         bool validDate;
+        decimal parsedPrice;
+        int parsedNumberOfPlaces;
 
-        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null || decimal.Parse(Price) <= 0 || int.Parse(_numberOfPlaces) < 1)
+        if (string.IsNullOrEmpty(_name) || string.IsNullOrEmpty(_description) || Image == null ||
+            !decimal.TryParse(Price, out parsedPrice) || parsedPrice <= 0 ||
+            !int.TryParse(_numberOfPlaces, out parsedNumberOfPlaces) || parsedNumberOfPlaces < 1)
             validDate = false;
         else
             validDate = true;
@@ -161,12 +168,23 @@ public class AdditionRoomViewModel : ViewModelBase
 
     private void ExecuteAddRoomCommand(object obj)
     {
-        using (var context = new SanatoriumContext())
+        if(CheckRoom(_repos))
         {
-            context.Rooms.Add(GetNewRoom(context));
-            context.SaveChanges();
-            Close?.Invoke();
+            ErrorMessage = "Такая комната уже сущесвует";
+            return;
         }
+
+        var newRoom = GetNewRoom(_repos);
+        _repos.Rooms.Create(newRoom);
+        _repos.Save();
+        Close?.Invoke();
+    }
+
+    private bool CheckRoom(IDbRepos repos)
+    {
+        var room = repos.Rooms.GetCollection().FirstOrDefault(a => a.Name == _name);
+
+        return room != null;
     }
 
     private void ExecuteUploadImageCommand(object obj)
@@ -187,9 +205,9 @@ public class AdditionRoomViewModel : ViewModelBase
         Image = new BitmapImage(new System.Uri(filePath));
     }
 
-    private Room GetNewRoom(SanatoriumContext context)
+    private Room GetNewRoom(IDbRepos repos)
     {
-        if (context == null)
+        if (repos == null)
             throw new NullReferenceException("An empty context was passed");
 
         Room room = new Room()
@@ -199,27 +217,23 @@ public class AdditionRoomViewModel : ViewModelBase
             NumberOfPlaces = int.Parse(this.NumberOfPlaces),
             Description = this.Description,
             Image = GetImageBytes(),
-            Status = context.RoomStatuses.FirstOrDefault(t => t.Id == 2),
-            Type = GetTypeOfRoomByType(_selectedType, context)
+            Status = _repos.Statuses.GetCollection().First(t => t.Name == "Готов"),
+            Type = GetTypeOfRoomByType(_selectedType, repos)
         };
 
         return room;
     }
 
-    private TypeOfRoom GetTypeOfRoomByType(string type, SanatoriumContext context)
+    private TypeOfRoom GetTypeOfRoomByType(string type, IDbRepos repos)
     {
-        if (context == null)
+        if (repos == null)
             throw new NullReferenceException("An empty context was passed");
 
-        return context.TypeOfRooms.FirstOrDefault(t => t.Type == type);
+        return repos.Types.GetCollection().First(t => t.Type == type);
     }
     private void LoadTypesOfRoom()
     {
-        using (var context = new SanatoriumContext())
-        {
-
-            Types = new ObservableCollection<string>(context.TypeOfRooms.Select(t => t.Type).ToList());
-        }
+        Types = new ObservableCollection<string>(_repos.Types.GetCollection().Select(t => t.Type));
     }
 
     private byte[] GetImageBytes()

@@ -113,21 +113,21 @@
                             </Border.Background>
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Width="10" Height="10" Margin="10,0,5,20" Background="Blue" 
+                                    <Button Width="10" Height="10" Margin="10,0,5,0" Background="Blue" 
                                             VerticalAlignment="Top" 
                                             Command="{Binding DataContext.ShowEditWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}">
                                         <fa:IconImage Icon="Pen" Foreground="White"/>
                                     </Button>
-                                    <Button Width="10" Height="10" Margin="0,0,0,20" Background="Red" 
+                                    <Button Width="10" Height="10" Background="Red" 
                                             VerticalAlignment="Top"
                                             Command="{Binding DataContext.DeleteTreatmentProgramCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding }">
                                         <fa:IconImage Icon="Xmark" Foreground="White"/>
                                     </Button>
                                 </StackPanel>
-                                <TextBlock Text="{Binding Name}" FontSize="18"/>
                                 <TextBlock Text="{Binding Price, StringFormat='₽{0:N2}'}" Foreground="Black" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Name}" FontSize="18" Margin="0,0,0,-60"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Win32;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
 using System.Collections.ObjectModel;
@@ -26,6 +28,7 @@ public class EditingARoomViewModel : ViewModelBase
     private string? _errorMessage;
 
     private string? _path;
+    private IDbRepos _repos;
 
     public ObservableCollection<string> Types
     {
@@ -139,7 +142,7 @@ public class EditingARoomViewModel : ViewModelBase
     public EditingARoomViewModel(Room room)
     {
         _room = room;
-        _types = new ObservableCollection<string>();
+        _repos = new DbEFRepos();
 
         LoadTypesOfRoom();
 
@@ -164,34 +167,50 @@ public class EditingARoomViewModel : ViewModelBase
 
     private void ExecuteSaveChangesCommand(object obj)
     {
-        using (var context = new SanatoriumContext())
+        if (CheckRoom(_repos))
         {
-            var customerInDb = context.Rooms.Find(_room.Id);
-
-            if (customerInDb != null)
-            {
-                customerInDb.Name = _name;
-                customerInDb.Description = _description;
-                customerInDb.Price = decimal.Parse(_price);
-                customerInDb.NumberOfPlaces = int.Parse(_numberOfPlaces);
-                customerInDb.Type = GetTypeOfRoomByType(_selectedType, context);
-
-                if (_path != null)
-                    customerInDb.Image = GetImageBytes();
-
-                context.SaveChanges();
-            }
+            ErrorMessage = "Такая комната уже сущесвует";
+            return;
         }
+
+        var roomInDb = _repos.Rooms.GetItem(_room.Id);
+
+        UpdateRoom(roomInDb);
 
         Close?.Invoke();
     }
 
-    private TypeOfRoom GetTypeOfRoomByType(string type, SanatoriumContext context)
+    private bool CheckRoom(IDbRepos repos)
     {
-        if (context == null)
+        var room = repos.Rooms.GetCollection().FirstOrDefault(a => a.Name == _name && a.Id != _room.Id);
+
+        return room != null;
+    }
+
+    private void UpdateRoom(Room roomInDb)
+    {
+        if (roomInDb != null)
+        {
+            roomInDb.Name = _name;
+            roomInDb.Description = _description;
+            roomInDb.Price = decimal.Parse(_price);
+            roomInDb.NumberOfPlaces = int.Parse(_numberOfPlaces);
+            var type = GetTypeOfRoomByType(_selectedType, _repos);
+            roomInDb.Type = type;
+
+            if (_path != null)
+                roomInDb.Image = GetImageBytes();
+
+            _repos.Save();
+        }
+    }
+
+    private TypeOfRoom GetTypeOfRoomByType(string type, IDbRepos repos)
+    {
+        if (repos == null)
             throw new NullReferenceException("An empty context was passed");
 
-        return context.TypeOfRooms.FirstOrDefault(t => t.Type == type);
+        return repos.Types.GetCollection().First(t => t.Type == type);
     }
 
     private void ExecuteEditImageCommand(object obj)
@@ -214,11 +233,7 @@ public class EditingARoomViewModel : ViewModelBase
 
     private void LoadTypesOfRoom()
     {
-        using (var context = new SanatoriumContext())
-        {
-
-            Types = new ObservableCollection<string>(context.TypeOfRooms.Select(t => t.Type).ToList());
-        }
+        Types = new ObservableCollection<string>(_repos.Types.GetCollection().Select(t => t.Type));
     }
 
     private void Init(Room room)

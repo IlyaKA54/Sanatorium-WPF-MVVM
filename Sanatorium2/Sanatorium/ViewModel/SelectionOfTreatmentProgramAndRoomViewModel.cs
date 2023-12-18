@@ -85,6 +85,7 @@ namespace Sanatorium.ViewModel
         }
 
         public ICommand CreateOrderCommand { get; private set; }
+        public ICommand CloseCommand { get; private set; }
 
         public Action Close;
 
@@ -93,11 +94,17 @@ namespace Sanatorium.ViewModel
             _customers = new ObservableCollection<CustomerOrder>();
 
             CreateOrderCommand = new ViewModelCommand(ExecuteCreateOrderCommand, CanExecuteCreateOrderCommand);
+            CloseCommand = new ViewModelCommand(ExecuteCloseCommand);
 
             LoadCustomers(customers);
 
             LoadRooms();
             LoadTreatmentPrograms();
+        }
+
+        private void ExecuteCloseCommand(object obj)
+        {
+            Close?.Invoke();
         }
 
         private bool CanExecuteCreateOrderCommand(object obj)

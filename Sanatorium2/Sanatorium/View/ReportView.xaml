@@ -98,7 +98,7 @@
                     Height="30"
                     Cursor="Hand"
                     BorderThickness="0"
-    Command="{Binding RefreshDataCommand}">
+                    Command="{Binding RefreshDataCommand}">
                 <fa:IconImage Icon="Refresh" Height="20" Width="20" Foreground="White"/>
                 <Button.Style>
                     <Style TargetType="Button">
@@ -110,6 +110,37 @@
                                     Background="{TemplateBinding Background}">
                                         <ContentPresenter VerticalAlignment="Center"
                                                       HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#836EFB"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button 
+        Margin="15,0,0,0"
+        Width="30"
+        Height="30"
+        Cursor="Hand"
+        BorderThickness="0"
+        Command="{Binding CreateReportCommand}">
+                <fa:IconImage Icon="Upload" Height="20" Width="20" Foreground="White"/>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="#773DFF"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Height="30"
+                                        Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
                                     </Border>
                                 </ControlTemplate>
                             </Setter.Value>

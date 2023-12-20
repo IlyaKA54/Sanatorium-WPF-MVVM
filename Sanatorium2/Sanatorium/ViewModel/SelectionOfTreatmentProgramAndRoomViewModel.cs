@@ -15,7 +15,7 @@ namespace Sanatorium.ViewModel
 {
     public class SelectionOfTreatmentProgramAndRoomViewModel : ViewModelBase
     {
-        private ObservableCollection<CustomerOrder> _customers;
+        private ObservableCollection<CustomerOrder> _customerOrders;
         private ObservableCollection<Room> _rooms;
         private ObservableCollection<TreatmentProgram> _programs;
         private DateTime _arrivalDate = DateTime.Now;
@@ -54,11 +54,11 @@ namespace Sanatorium.ViewModel
         {
             get
             {
-                return _customers;
+                return _customerOrders;
             }
             set
             {
-                _customers = value;
+                _customerOrders = value;
                 OnPropertyChanged();
             }
         }
@@ -97,7 +97,7 @@ namespace Sanatorium.ViewModel
         public SelectionOfTreatmentProgramAndRoomViewModel(ObservableCollection<Customer> customers)
         {
             _repos = new DbEFRepos();
-            _customers = new ObservableCollection<CustomerOrder>();
+            _customerOrders = new ObservableCollection<CustomerOrder>();
 
             CreateOrderCommand = new ViewModelCommand(ExecuteCreateOrderCommand, CanExecuteCreateOrderCommand);
             CloseCommand = new ViewModelCommand(ExecuteCloseCommand);
@@ -124,11 +124,9 @@ namespace Sanatorium.ViewModel
         private bool ValidateCustomerOrderList()
         {
 
-            foreach (var customer in _customers)
-            {
+            foreach (var customer in _customerOrders)
                 if (customer.TreatmentProgram == null || customer.Room == null)
                     return false;
-            }
 
             return true;
         }
@@ -138,7 +136,6 @@ namespace Sanatorium.ViewModel
             CalculatePrice();
 
             _repos.Orders.Create(GetNewOrder());
-            _repos.Save();
 
             SaveCustomerOrders();
             AddAVisit();
@@ -149,7 +146,7 @@ namespace Sanatorium.ViewModel
         {
             var lastOrder = _repos.Orders.GetCollection().LastOrDefault();
 
-            foreach (var customer in _customers)
+            foreach (var customer in _customerOrders)
             {
                 var newCustomerOrder = GetNewCustomerOrder(customer, lastOrder);
 
@@ -184,7 +181,7 @@ namespace Sanatorium.ViewModel
 
         private void CalculatePrice()
         {
-            foreach (var customer in _customers)
+            foreach (var customer in _customerOrders)
             {
                 decimal discount;
 
@@ -200,7 +197,7 @@ namespace Sanatorium.ViewModel
 
         private void AddAVisit()
         {
-            var customerIds = _customers.Select(customer => customer.Id).ToList();
+            var customerIds = _customerOrders.Select(customerOrder => customerOrder.Customer.Id).ToList();
 
             foreach (var customerId in customerIds)
             {
@@ -214,7 +211,7 @@ namespace Sanatorium.ViewModel
         {
             foreach (var customer in customers)
             {
-                _customers.Add(new CustomerOrder { Customer = customer });
+                _customerOrders.Add(new CustomerOrder { Customer = customer });
             }
         }
 
@@ -247,7 +244,7 @@ namespace Sanatorium.ViewModel
             var customerOrders = GetCustomerOrders(activeOrders);
 
             return _repos.Rooms.GetCollection()
-                .Where(room => room.NumberOfPlaces - customerOrders.Count(co => co.Room.Id == room.Id) >= _customers.Count)
+                .Where(room => room.NumberOfPlaces - customerOrders.Count(co => co.Room.Id == room.Id) >= _customerOrders.Count)
                 .ToList();
         }
 

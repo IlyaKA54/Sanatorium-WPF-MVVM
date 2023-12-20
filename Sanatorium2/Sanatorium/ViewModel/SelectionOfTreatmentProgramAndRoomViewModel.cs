@@ -1,10 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sanatorium.Model.Data;
 using Sanatorium.Model.Entities;
+using Sanatorium.Model.Repositories;
+using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.ViewModel.Base;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace Sanatorium.ViewModel
@@ -18,6 +22,7 @@ namespace Sanatorium.ViewModel
         private DateTime _dateOfDeparture = DateTime.Now;
 
         private decimal _price;
+        private IDbRepos _repos;
 
         public DateTime ArrivalDate
         {
@@ -91,6 +96,7 @@ namespace Sanatorium.ViewModel
 
         public SelectionOfTreatmentProgramAndRoomViewModel(ObservableCollection<Customer> customers)
         {
+            _repos = new DbEFRepos();
             _customers = new ObservableCollection<CustomerOrder>();
 
             CreateOrderCommand = new ViewModelCommand(ExecuteCreateOrderCommand, CanExecuteCreateOrderCommand);
@@ -131,39 +137,39 @@ namespace Sanatorium.ViewModel
         {
             CalculatePrice();
 
-            using (var context = new SanatoriumContext())
-            {
-                context.Orders.Add(GetNewOrder());
-                context.SaveChanges();
-            }
+            _repos.Orders.Create(GetNewOrder());
+            _repos.Save();
 
             SaveCustomerOrders();
+            AddAVisit();
             Close?.Invoke();
         }
 
         private void SaveCustomerOrders()
         {
-            using (var context = new SanatoriumContext())
+            var lastOrder = _repos.Orders.GetCollection().LastOrDefault();
+
+            foreach (var customer in _customers)
             {
-                var last = context.Orders.OrderByDescending(order => order.Id).First();
+                var newCustomerOrder = GetNewCustomerOrder(customer, lastOrder);
 
-                foreach (var customer in _customers)
-                {
-                    var newCustomerOrder = new CustomerOrder
-                    {
-                        Customer = context.Customers.FirstOrDefault(t => t.Id == customer.Customer.Id),
-                        Room = context.Rooms.FirstOrDefault(t => t.Id == customer.Room.Id),
-                        TreatmentProgram = context.TreatmentPrograms.FirstOrDefault(t => t.Id == customer.TreatmentProgram.Id),
-                        IdOrder = context.Orders.FirstOrDefault(t => t.Id == last.Id)
-                    };
-
-                    context.CustomerOrders.Add(newCustomerOrder);
-                    
-                }
-
-                context.SaveChanges();
-
+                _repos.CustomerOrders.Create(newCustomerOrder);
             }
+
+            _repos.Save();
+        }
+
+        private CustomerOrder GetNewCustomerOrder(CustomerOrder customer, Order lastOrder )
+        {
+            var newCustomerOrder = new CustomerOrder
+            {
+                Customer = _repos.Customers.GetItem(customer.Customer.Id),
+                Room = _repos.Rooms.GetItem(customer.Room.Id),
+                TreatmentProgram = _repos.TreatmentPrograms.GetItem(customer.TreatmentProgram.Id),
+                IdOrder = lastOrder
+            };
+
+            return newCustomerOrder;
         }
 
         private Order GetNewOrder()
@@ -189,15 +195,21 @@ namespace Sanatorium.ViewModel
 
                 _price += (customer.TreatmentProgram.Price + customer.Room.Price) * discount;
 
-                AddAVisit(customer.Customer);
             }
         }
 
-        private void AddAVisit(Customer customer)
+        private void AddAVisit()
         {
-            customer.NumberOfVisits++;
-        }
+            var customerIds = _customers.Select(customer => customer.Id).ToList();
 
+            foreach (var customerId in customerIds)
+            {
+                var customer = _repos.Customers.GetItem(customerId);
+                customer.NumberOfVisits++;
+            }
+
+            _repos.Save();
+        }
         private void LoadCustomers(ObservableCollection<Customer> customers)
         {
             foreach (var customer in customers)
@@ -208,18 +220,40 @@ namespace Sanatorium.ViewModel
 
         public void LoadRooms()
         {
-            using (var context = new SanatoriumContext())
-            {
-                Rooms = new ObservableCollection<Room>(context.Rooms.Include(a => a.Type).Include(a => a.Status).ToList());
-            }
+            var currentDate = DateTime.Now;
+
+            var availableRooms = GetAvailableRooms(currentDate);
+
+            Rooms = new ObservableCollection<Room>(availableRooms);
+        }
+
+        private List<Order> GetActiveOrders(DateTime currentDate)
+        {
+            return _repos.Orders.GetCollection()
+                .Where(order => currentDate >= order.ArrivalDate && currentDate <= order.DateOfDeparture)
+                .ToList();
+        }
+
+        private List<CustomerOrder> GetCustomerOrders(List<Order> activeOrders)
+        {
+            return activeOrders
+                .SelectMany(order => _repos.CustomerOrders.GetCollection().Where(co => co.IdOrder.Id == order.Id))
+                .ToList();
+        }
+
+        private List<Room> GetAvailableRooms(DateTime currentDate)
+        {
+            var activeOrders = GetActiveOrders(currentDate);
+            var customerOrders = GetCustomerOrders(activeOrders);
+
+            return _repos.Rooms.GetCollection()
+                .Where(room => room.NumberOfPlaces - customerOrders.Count(co => co.Room.Id == room.Id) >= _customers.Count)
+                .ToList();
         }
 
         private void LoadTreatmentPrograms()
         {
-            using (var context = new SanatoriumContext())
-            {
-                Programs = new ObservableCollection<TreatmentProgram>(context.TreatmentPrograms.ToList());
-            }
+            Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection());
         }
     }
 }

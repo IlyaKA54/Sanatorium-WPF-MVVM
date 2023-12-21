@@ -34,187 +34,165 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="35"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="35"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel x:Name="pnlControlBar"
-                            Grid.Row="0"
-                            Orientation="Horizontal"
-                            FlowDirection="RightToLeft"
-                            Background="Transparent"
-                            Margin="0,0,5,0"
-                            MouseLeftButtonDown="pnlControlBar_MouseLeftButtonDown"
-                            MouseEnter="pnlControlBar_MouseEnter">
-                   
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                    <Button x:Name="btnClose"
-                            Command="{Binding CloseCommand}">
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource color11}"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Width="25" Height="22"
-                                    Background="{TemplateBinding Background}">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                                    HorizontalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                        <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
-                    </Button>
-
-
-
-                    <Button x:Name="btnMaximize"
-                             Click="btnMaximize_Click">
-                        <fa:IconImage Icon="Square" Style="{StaticResource controlButtonIcon}"/>
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource color8}"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Width="25" Height="22"
-                                        Background="{TemplateBinding Background}">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-
-                    <Button x:Name="btnMinimize"
-                            Click="btnMinimize_Click">
-                        <fa:IconImage Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource color12}"/>
-                                        <Setter Property="Foreground" Value="White"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Width="25" Height="22"
-                                 Background="{TemplateBinding Background}">
-                                    <ContentPresenter VerticalAlignment="Center"
-                                    HorizontalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-
-                    <Button Grid.Column="1"                    
-                                Content="Добавить"                            
-                                FontSize="12"
-                                FontFamily="Montserrat"
-                                Cursor="Hand"
-                                BorderThickness="0"
-                                Foreground="White"
-                                VerticalAlignment="Top"
-                                Command="{Binding CheckInCustomersCommand}"
-                                        Width="100"
-                                        Height="30"
-                                        HorizontalAlignment="Right"
-                                        Margin="10,5,300,0"> 
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Background" Value="#773DFF"/>
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Height="30"
-                        CornerRadius="15"
+                    <StackPanel Grid.Row="0" Grid.Column="0"
+                                Orientation="Horizontal"
+                                FlowDirection="RightToLeft"
+                                HorizontalAlignment="Left">
+                        <Button 
+                        Margin="0,5,15,0"
+                        Width="30"
+                        Height="30"
+                        Cursor="Hand"
+                        BorderThickness="0"
+                        Command="{Binding RefreshCommand}">
+                            <fa:IconImage Icon="Refresh" Height="20" Width="20" Foreground="White"/>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#773DFF"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Height="30"
                         Background="{TemplateBinding Background}">
-                                                <ContentPresenter VerticalAlignment="Center"
+                                                    <ContentPresenter VerticalAlignment="Center"
                                           HorizontalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#836EFB"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    
-                    <Button 
-    Margin="10,0,0,0"
-    Width="30"
-    Height="30"
-    Cursor="Hand"
-    BorderThickness="0"
-    Command="{Binding RefreshCommand}">     
-    <fa:IconImage Icon="Refresh" Height="20" Width="20" Foreground="White"/>
-    <Button.Style>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="#773DFF"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Height="30"
-    Background="{TemplateBinding Background}">
-                            <ContentPresenter VerticalAlignment="Center"
-                      HorizontalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#836EFB"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Button.Style>
-</Button>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#836EFB"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
 
-                    
-                    <TextBox    
-            FontSize="13"
-            Height="24"
-            Width="200"
-            Background="Transparent"
-            FontWeight="Medium"
-            FontFamily="Montserrat"                            
-            Foreground="{StaticResource plainTextColor3}"
-            CaretBrush="{StaticResource plainTextColor3}"
-            BorderBrush="{StaticResource plainTextColor3}"
-            BorderThickness="0,0,0,1"                             
-            VerticalContentAlignment="Center"
-            Margin="5,5,0,0"
-            Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+
+                        <TextBox    
+                        FontSize="13"
+                        Height="24"
+                        Width="200"
+                        Background="Transparent"
+                        FontWeight="Medium"
+                        FontFamily="Montserrat"                            
+                        Foreground="{StaticResource plainTextColor3}"
+                        CaretBrush="{StaticResource plainTextColor3}"
+                        BorderBrush="{StaticResource plainTextColor3}"
+                        BorderThickness="0,0,0,1"                             
+                        VerticalContentAlignment="Center"
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         HorizontalAlignment="Left"
-                        TextAlignment="Right"/>
+                        TextAlignment="Right"
+                            Margin="0,5,10,0"/>
 
-                    <fa:IconImage Icon="Search" Height="20" Width="20" Foreground="{StaticResource plainTextColor3}" HorizontalAlignment="Left"/>
+                        <fa:IconImage Icon="Search" Height="20" Width="20" 
+                                      Foreground="{StaticResource plainTextColor3}" 
+                                      HorizontalAlignment="Left"
+                                      Margin="0,5,10,0"/>
+                    </StackPanel>
 
-                </StackPanel>
+                    <StackPanel Grid.Row="0" 
+                                Grid.Column="1"
+                                Orientation="Horizontal"
+                                FlowDirection="RightToLeft"
+                                HorizontalAlignment="Right"
+                                Margin="0,0,0,0">
+
+                        <Button x:Name="btnClose"
+                            Command="{Binding CloseCommand}"
+                                Margin="2,0,0,0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource color11}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="25" Height="22"
+                                    Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                            <fa:IconImage Icon="Xmark" Style="{StaticResource controlButtonIcon}"/>
+                        </Button>
+
+
+
+                        <Button x:Name="btnMaximize"
+                             Click="btnMaximize_Click">
+                            <fa:IconImage Icon="Square" Style="{StaticResource controlButtonIcon}"/>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource color8}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="25" Height="22"
+                                        Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                                        HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <Button x:Name="btnMinimize"
+                            Click="btnMinimize_Click">
+                            <fa:IconImage Icon="WindowMinimize" Width="12" Style="{StaticResource controlButtonIcon}"/>
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource color12}"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Width="25" Height="22"
+                                 Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+
 
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
@@ -348,6 +326,87 @@
                         </ItemsControl>
                     </ScrollViewer>
 
+            
+
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0"                    
+                                Content="Отмена"                            
+                                FontSize="12"
+                                FontFamily="Montserrat"
+                                Cursor="Hand"
+                                BorderThickness="0"
+                                Foreground="White"
+                                VerticalAlignment="Top"
+                                Command="{Binding CloseCommand}"
+                                        Width="100"
+                                        Height="30"
+                                        HorizontalAlignment="Center">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#FB539B"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Height="30"
+                        CornerRadius="15"
+                        Background="{TemplateBinding Background}">
+                                                <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#836EFB"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Grid.Column="1"                    
+                                Content="Добавить"                            
+                                FontSize="12"
+                                FontFamily="Montserrat"
+                                Cursor="Hand"
+                                BorderThickness="0"
+                                Foreground="Black"
+                                VerticalAlignment="Top"
+                                Command="{Binding CheckInCustomersCommand}"
+                                        Width="100"
+                                        Height="30"
+                                        HorizontalAlignment="Center">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#32CD32"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Height="30"
+                        CornerRadius="15"
+                        Background="{TemplateBinding Background}">
+                                                <ContentPresenter VerticalAlignment="Center"
+                                          HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#836EFB"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
 
                 </Grid>
 

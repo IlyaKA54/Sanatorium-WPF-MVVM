@@ -73,6 +73,7 @@ public class EditingACustomerViewModel : CustomerViewModelBase
         BirthDate = customerToEdit.BirthDate;
         Phone = customerToEdit.Phone;
         Image = ByteArrayToImageSource(customerToEdit.Image);
+        NumberOfVisits = customerToEdit.NumberOfVisits;
     }
 
     private void ExecuteEditImageCommand(object obj)

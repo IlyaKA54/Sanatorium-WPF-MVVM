@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Microsoft.Win32;
+using System.Text;
 
 namespace Sanatorium.ViewModel;
 
@@ -192,8 +193,14 @@ public class ReportViewModel : ViewModelBase
 
     public static void GenerateCsvReport(Dictionary<string, int> data, string filePath)
     {
-        using (var writer = new StreamWriter(filePath))
-        using (var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)))
+        var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            Delimiter = ";",
+            ShouldUseConstructorParameters = _ => false // отключаем создание конструктора для анонимных типов
+        };
+
+        using (var writer = new StreamWriter(filePath, false, Encoding.UTF8))
+        using (var csv = new CsvWriter(writer, csvConfig))
         {
             csv.WriteRecords(data.Select(item => new { Name = item.Key, Count = item.Value }));
         }

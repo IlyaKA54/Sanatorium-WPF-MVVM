@@ -9,6 +9,7 @@ public abstract class CustomerViewModelBase: ViewModelBase,ICustomer
     private string? _secondName;
     private string? _surname;
     private string? _phone;
+    private int _numberOfVisits;
     private DateTime _birthDate { get; set; } = DateTime.Today;
 
     private ImageSource _image;
@@ -59,6 +60,19 @@ public abstract class CustomerViewModelBase: ViewModelBase,ICustomer
         set
         {
             _phone = value;
+            OnPropertyChanged(nameof(Phone));
+        }
+    }
+
+    public int NumberOfVisits
+    {
+        get
+        {
+            return _numberOfVisits;
+        }
+        set
+        {
+            _numberOfVisits = value;
             OnPropertyChanged(nameof(Phone));
         }
     }

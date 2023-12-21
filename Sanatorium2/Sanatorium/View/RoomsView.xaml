@@ -70,7 +70,7 @@
                             <StackPanel Margin="0,0,0,-20">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
-                                    <Button Width="10" Height="10" Margin="0,0,5,0" 
+                                    <Button Width="10" Height="10" Margin="0,5,5,0" 
                                         VerticalAlignment="Top"
                                         Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                         CommandParameter="{Binding}">
@@ -89,7 +89,7 @@
                                         <fa:IconImage Icon="Broom" Foreground="White"/>
                                     </Button>
 
-                                    <Button Width="10" Height="10" Margin="0,0,5,0" Background="Blue" 
+                                    <Button Width="10" Height="10" Margin="0,5,5,0" Background="Blue" 
                                             VerticalAlignment="Top"
                                             Command="{Binding DataContext.ShowEditWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                             CommandParameter="{Binding}">
@@ -98,7 +98,12 @@
                                     
                                 </StackPanel>
                                 <TextBlock Text="{Binding Price, StringFormat='₽{0:N2}'}" Foreground="Black" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Name}" FontSize="18"/>
+                                <TextBlock>
+                                    <Run Text="Номер:"/>
+                                    <Run Text="{Binding Name}"/>
+                                    <Run Text=" Мест: " />
+                                    <Run Text="{Binding NumberOfPlaces}"/>
+                                </TextBlock>
                             </StackPanel>
                         </Border>
                     </DataTemplate>

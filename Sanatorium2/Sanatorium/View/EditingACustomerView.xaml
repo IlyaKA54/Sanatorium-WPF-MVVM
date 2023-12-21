@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Sanatorium.View"
         xmlns:VM="clr-namespace:Sanatorium.ViewModel" d:DataContext="{d:DesignInstance Type=VM:EditingACustomerViewModel}"
         mc:Ignorable="d"
-        Title="EditingACustomerView" Height="700" Width="400"
+        Title="EditingACustomerView" Height="735" Width="400"
         WindowStartupLocation="CenterScreen" Background="Transparent" 
         AllowsTransparency="true" WindowStyle="None" ResizeMode="NoResize" 
         MouseDown="OnMouseDown">
@@ -267,6 +267,17 @@
                                         AlignmentX="Left"/>
                         </TextBox.Background>
                     </TextBox>
+
+                    <TextBlock 
+                               Foreground="Black"
+                               FontSize="12"
+                               FontWeight="Medium"
+                               FontFamily="Montserrat"                             
+                               Margin="0,35,0,0">
+                        <Run Text="Количество посещений: "/>
+                        <Run Text="{Binding NumberOfVisits}"/>
+
+                    </TextBlock>
 
 
                     <TextBlock Text="{Binding ErrorMessage}"

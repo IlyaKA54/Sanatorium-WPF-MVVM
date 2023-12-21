@@ -19,7 +19,7 @@ namespace Sanatorium.ViewModel
         private ObservableCollection<Room> _rooms;
         private ObservableCollection<TreatmentProgram> _programs;
         private DateTime _arrivalDate = DateTime.Now;
-        private DateTime _dateOfDeparture = DateTime.Now;
+        private DateTime _dateOfDeparture = DateTime.Now.AddDays(1);
 
         private decimal _price;
         private IDbRepos _repos;
@@ -115,7 +115,7 @@ namespace Sanatorium.ViewModel
 
         private bool CanExecuteCreateOrderCommand(object obj)
         {
-            if (_arrivalDate < DateTime.Now.AddDays(-1) || _arrivalDate > _dateOfDeparture || !ValidateCustomerOrderList())
+            if (_arrivalDate < DateTime.Now.AddDays(-1) || _arrivalDate >= _dateOfDeparture || !ValidateCustomerOrderList())
                 return false;
             else
                 return true;
@@ -245,6 +245,7 @@ namespace Sanatorium.ViewModel
 
             return _repos.Rooms.GetCollection()
                 .Where(room => room.NumberOfPlaces - customerOrders.Count(co => co.Room.Id == room.Id) >= _customerOrders.Count)
+                .Where(room => room.Status.Name != "Уборка")
                 .ToList();
         }
 

@@ -5,6 +5,7 @@ using Sanatorium.Model.Repositories;
 using Sanatorium.Model.Repositories.Interface;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -161,5 +162,20 @@ public class RoomsViewModel : ViewModelBase
         else
             Rooms = new ObservableCollection<Room>(_repos.Rooms.GetCollection().Where(r => r.Type.Type == str));
 
+        CalculateTheNumberOfFreeSeatsInTheRoom(Rooms);
+    }
+
+    private void CalculateTheNumberOfFreeSeatsInTheRoom(IEnumerable<Room> rooms)
+    {
+        var currentDate = DateTime.Now;
+
+        foreach (var room in rooms)
+        {
+            var numberOfOccupiedSeatsInTheRoom = _repos.CustomerOrders.GetCollection()
+                .Where(a => currentDate >= a.IdOrder.ArrivalDate && currentDate <= a.IdOrder.DateOfDeparture && a.Room.Id == room.Id)
+                .Count();
+
+            room.NumberOfPlaces -= numberOfOccupiedSeatsInTheRoom;
+        }
     }
 }

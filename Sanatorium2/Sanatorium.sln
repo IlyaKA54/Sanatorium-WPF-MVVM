@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sanatorium", "Sanatorium\Sanatorium.csproj", "{B2B23126-1D65-42D0-89B3-2CCCDAE98495}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject3", "TestProject3\TestProject3.csproj", "{C8D9C78C-EC3E-485A-8B0B-1F9EF05C8078}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B2B23126-1D65-42D0-89B3-2CCCDAE98495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2B23126-1D65-42D0-89B3-2CCCDAE98495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2B23126-1D65-42D0-89B3-2CCCDAE98495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D9C78C-EC3E-485A-8B0B-1F9EF05C8078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D9C78C-EC3E-485A-8B0B-1F9EF05C8078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D9C78C-EC3E-485A-8B0B-1F9EF05C8078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D9C78C-EC3E-485A-8B0B-1F9EF05C8078}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

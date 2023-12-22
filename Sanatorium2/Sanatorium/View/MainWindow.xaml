@@ -6,7 +6,7 @@
         xmlns:viewModel="clr-namespace:Sanatorium.ViewModel"
         xmlns:local="clr-namespace:Sanatorium.ViewModel"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" 
-        xmlns:local1="clr-namespace:Sanatorium.View"
+        xmlns:local1="clr-namespace:Sanatorium.View" d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Background="Transparent" 
         AllowsTransparency="true" WindowStyle="None"  WindowStartupLocation="CenterScreen" 

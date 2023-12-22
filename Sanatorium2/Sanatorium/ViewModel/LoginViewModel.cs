@@ -98,7 +98,7 @@ public class LoginViewModel : ViewModelBase
     private void ExecuteLoginCommand(object obj)
     {
         var isValidUser = _userRepository.AuthenticateUser(Username, Password);
-        User user;
+        UserRoleInfo user;
 
         if(isValidUser)
         {
@@ -114,7 +114,7 @@ public class LoginViewModel : ViewModelBase
         }
     }
 
-    private User GetUser()
+    private UserRoleInfo GetUser()
     {
         switch (Username)
         {

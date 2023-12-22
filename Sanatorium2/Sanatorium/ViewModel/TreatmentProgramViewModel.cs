@@ -2,6 +2,7 @@
 using Sanatorium.Model.Entities;
 using Sanatorium.Model.Repositories;
 using Sanatorium.Model.Repositories.Interface;
+using Sanatorium.Users;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
 using System.Collections.ObjectModel;
@@ -18,6 +19,8 @@ class TreatmentProgramViewModel : ViewModelBase
 
     private Window _currentActiveWindow;
     private IDbRepos _repos;
+    private UserRoleInfo _user;
+    public UserRoleInfo User => _user;
     public string? SearchText
     {
         get
@@ -49,12 +52,14 @@ class TreatmentProgramViewModel : ViewModelBase
     public ICommand ShowEditWindowCommand { get; private set; }
     public ICommand RefreshCommand { get; private set; }
     public ICommand DeleteTreatmentProgramCommand { get; private set; }
-    public TreatmentProgramViewModel()
+    public TreatmentProgramViewModel(UserRoleInfo user)
     {
         ShowAddTreatmentProgramCommand = new ViewModelCommand(ExecuteShowTreatmentProgramCommand);
         RefreshCommand = new ViewModelCommand(ExecuteRefreshCommand);
         DeleteTreatmentProgramCommand = new ViewModelCommand(ExecuteDeleteTreatmentProgramCommand);
         ShowEditWindowCommand = new ViewModelCommand(ExecuteShowEditWindowCommand);
+
+        _user = user;
 
         LoadTreatmentPrograms();
     }
@@ -123,7 +128,7 @@ class TreatmentProgramViewModel : ViewModelBase
         if (string.IsNullOrEmpty(str))
             Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection());
         else
-            Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection().Where(c => c.Name.StartsWith(str)));
+            Programs = new ObservableCollection<TreatmentProgram>(_repos.TreatmentPrograms.GetCollection().Where(c => c.Name.StartsWith(str)).ToList());
     }
 
 }

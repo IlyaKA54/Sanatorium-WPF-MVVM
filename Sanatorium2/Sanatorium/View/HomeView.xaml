@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Sanatorium.View" xmlns:viewmodel="clr-namespace:Sanatorium.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:HomeViewModel}"
+             xmlns:local="clr-namespace:Sanatorium.View" xmlns:viewmodel="clr-namespace:Sanatorium.ViewModel" xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" d:DataContext="{d:DesignInstance Type=viewmodel:HomeViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -76,22 +76,27 @@
 
                                 </Grid.ColumnDefinitions>
 
+                                <Button Width="10" Height="10" Grid.Column="6" 
+                                                Background="Blue" 
+                                        VerticalAlignment="Top"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding DataContext.ShowInfoWindowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                CommandParameter="{Binding}">
+                                    <fa:IconImage Icon="Question" Foreground="White"/>
+                                </Button>
+
                                 <TextBlock Grid.Column="0" VerticalAlignment="Center">
                                     <Run Text="Дата заезда: "/>
-                                    <Run Text="{Binding IdOrder.ArrivalDate,StringFormat='dd.MM.yyyy'}"/>
+                                    <Run Text="{Binding ArrivalDate,StringFormat='dd.MM.yyyy'}"/>
                                 </TextBlock>
                                 <TextBlock Grid.Column="1" VerticalAlignment="Center">
                                     <Run Text="Дата выезды: "/>
-                                    <Run Text="{Binding IdOrder.DateOfDeparture,StringFormat='dd.MM.yyyy'}"/>
+                                    <Run Text="{Binding DateOfDeparture,StringFormat='dd.MM.yyyy'}"/>
                                 </TextBlock>
 
-                                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
-                                    <Run Text="Итог: "/>
-                                    <Run Text="{Binding IdOrder.Price, StringFormat=C }" xml:lang="ru-RU"/>
-                                </TextBlock>
                                 <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">
-                                    <Run Text="Комната: "/>
-                                    <Run Text="{Binding Room.Name}"/>
+                                    <Run Text="Итог: "/>
+                                    <Run Text="{Binding Price, StringFormat=C }" xml:lang="ru-RU"/>
                                 </TextBlock>
 
                             </Grid>

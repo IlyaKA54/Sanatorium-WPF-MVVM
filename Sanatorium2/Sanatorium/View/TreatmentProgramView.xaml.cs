@@ -9,7 +9,6 @@ namespace Sanatorium.View
         public TreatmentProgramView()
         {
             InitializeComponent();
-            DataContext = new TreatmentProgramViewModel();
         }
     }
 }

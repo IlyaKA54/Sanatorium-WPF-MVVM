@@ -12,10 +12,10 @@ namespace Sanatorium.ViewModel;
 
 public class HomeViewModel : ViewModelBase
 {
-    private ObservableCollection<CustomerOrder> _orders;
+    private ObservableCollection<Order> _orders;
     private IDbRepos _repos;
 
-    public ObservableCollection<CustomerOrder> Orders
+    public ObservableCollection<Order> Orders
     {
         get
         {
@@ -29,12 +29,24 @@ public class HomeViewModel : ViewModelBase
     }
 
     public ICommand ShowCustomerSelectionCommand { get; private set; }
+    public ICommand ShowInfoWindowCommand { get; private set; }
 
     public HomeViewModel()
     {
         ShowCustomerSelectionCommand = new ViewModelCommand(ExecuteShowCustomerSelectionCommand);
+        ShowInfoWindowCommand = new ViewModelCommand(ExecuteShowInfoWindowCommand);
+
         _repos = new DbEFRepos();
         LoadOrders();
+    }
+
+    private void ExecuteShowInfoWindowCommand(object obj)
+    {
+        if(obj is Order order)
+        {
+            var newWindow = new OrderInfoView(new OrderInfoViewModel(order));
+            newWindow.Show();
+        }
     }
 
     private void ExecuteShowCustomerSelectionCommand(object obj)
@@ -47,11 +59,11 @@ public class HomeViewModel : ViewModelBase
     {
         var currentDate = DateTime.Now;
 
-        var orders = _repos.CustomerOrders
+        var orders = _repos.Orders
             .GetCollection()
-            .Where(co => co.IdOrder.DateOfDeparture > currentDate)
+            .Where(co => co.DateOfDeparture >= currentDate && co.ArrivalDate <= currentDate)
             .ToList();
 
-        Orders = new ObservableCollection<CustomerOrder>(orders);
+        Orders = new ObservableCollection<Order>(orders);
     }
 }

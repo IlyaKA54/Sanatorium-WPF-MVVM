@@ -8,7 +8,6 @@ namespace Sanatorium.View
         public RoomsView()
         {
             InitializeComponent();
-            DataContext = new RoomsViewModel();
         }
     }
 }

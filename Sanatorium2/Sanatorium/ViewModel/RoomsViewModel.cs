@@ -1,8 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Sanatorium.Model.Data;
-using Sanatorium.Model.Entities;
+﻿using Sanatorium.Model.Entities;
 using Sanatorium.Model.Repositories;
 using Sanatorium.Model.Repositories.Interface;
+using Sanatorium.Users;
 using Sanatorium.View;
 using Sanatorium.ViewModel.Base;
 using System;
@@ -23,6 +22,9 @@ public class RoomsViewModel : ViewModelBase
     private ObservableCollection<string> _types;
     private IDbRepos _repos;
     private string _selectedType;
+    private UserRoleInfo _user;
+
+    public UserRoleInfo User => _user;
 
     public string SelectedType
     {
@@ -69,10 +71,12 @@ public class RoomsViewModel : ViewModelBase
     public ICommand ShowEditWindowCommand { get; private set; }
 
     public ICommand ChangeStatusCommand { get; private set; }
-    public RoomsViewModel()
+    public RoomsViewModel(UserRoleInfo user)
     {
         _repos = new DbEFRepos();
         _types = new ObservableCollection<string>();
+
+        _user = user;
 
         _types.Add("Все номера");
         _types = new ObservableCollection<string>(_types.Concat(LoadTypesOfRoom()));
@@ -88,6 +92,8 @@ public class RoomsViewModel : ViewModelBase
     {
         if (obj is Room room)
         {
+            _repos = new DbEFRepos();
+
             var roomRepository = _repos.Rooms;
 
             var roomFromDatabase = roomRepository.GetCollection()
@@ -96,15 +102,17 @@ public class RoomsViewModel : ViewModelBase
             if (roomFromDatabase != null)
             {
                 if (room.Status.Name == "Готов")
+
                     roomFromDatabase.Status = _repos.Statuses.GetCollection().Single(s => s.Name == "Уборка");
                 else
                     roomFromDatabase.Status = _repos.Statuses.GetCollection().Single(s => s.Name == "Готов");
 
                 _repos.Save();
             }
+
+            LoadRooms();
         }
 
-        LoadRooms();
     }
 
     private void ExecuteShowEditWindowCommand(object obj)
@@ -160,7 +168,7 @@ public class RoomsViewModel : ViewModelBase
         if (string.IsNullOrEmpty(str) || str == _types[0])
             Rooms = new ObservableCollection<Room>(_repos.Rooms.GetCollection());
         else
-            Rooms = new ObservableCollection<Room>(_repos.Rooms.GetCollection().Where(r => r.Type.Type == str));
+            Rooms = new ObservableCollection<Room>(_repos.Rooms.GetCollection().Where(r => r.Type.Type == str).ToList());
 
         CalculateTheNumberOfFreeSeatsInTheRoom(Rooms);
     }

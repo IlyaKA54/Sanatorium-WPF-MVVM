@@ -1,6 +1,6 @@
 ﻿namespace Sanatorium.Users;
 
-public class Receptionist : User
+public class Receptionist : UserRoleInfo
 {
     public Receptionist() : base(true, true, false, true, true)
     {

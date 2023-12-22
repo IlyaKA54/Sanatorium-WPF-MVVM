@@ -9,14 +9,12 @@ namespace Sanatorium
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            var mainView = new MainWindow { DataContext = new MainViewModel(new Admin()) };
-            mainView.Show();
 
-            //var loginVM = new LoginViewModel();
-            //var loginView = new LoginView();
-            //loginView.SetDataContext(loginVM);
+            var loginVM = new LoginViewModel();
+            var loginView = new LoginView();
+            loginView.SetDataContext(loginVM);
 
-            //loginView.Show();
+            loginView.Show();
 
         }
     }

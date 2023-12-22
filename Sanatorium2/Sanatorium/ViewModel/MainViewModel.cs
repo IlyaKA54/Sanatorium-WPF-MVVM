@@ -13,21 +13,9 @@ namespace Sanatorium.ViewModel
         private string _caption;
         private IconChar _icon;
 
-        private User _user;
+        private UserRoleInfo _user;
 
-        public User User
-        {
-            get
-            {
-                return _user;
-            }
-            set
-            {
-                _user = value;
-                OnPropertyChanged();
-            }
-        }
-
+        public UserRoleInfo User => _user;
 
         public ViewModelBase CurrentChildView
         {
@@ -73,14 +61,14 @@ namespace Sanatorium.ViewModel
         public ICommand ShowTreatmentProgramsViewCommand { get; }
         public ICommand ShowReportViewCommand { get; }
 
-        public MainViewModel(User user)
+        public MainViewModel(UserRoleInfo user)
         {
             ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowCustomerViewCommand = new ViewModelCommand(ExecuteShowCustomerViewCommand);
             ShowRoomViewCommand = new ViewModelCommand(ExecuteShowRoomViewCommand);
             ShowTreatmentProgramsViewCommand = new ViewModelCommand(ExecuteShowTreatmentProgramViewCommand);
             ShowReportViewCommand = new ViewModelCommand(ExecuteShowReportViewCommand);
-            User = user;
+            _user = user;
         }
 
         private void ExecuteShowReportViewCommand(object obj)
@@ -92,7 +80,7 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteShowTreatmentProgramViewCommand(object obj)
         {
-            CurrentChildView = new TreatmentProgramViewModel();
+            CurrentChildView = new TreatmentProgramViewModel(_user);
             Caption = "Программы лечения";
             Icon = IconChar.HouseMedical;
         }
@@ -113,7 +101,7 @@ namespace Sanatorium.ViewModel
 
         private void ExecuteShowRoomViewCommand(object obj)
         {
-            CurrentChildView = new RoomsViewModel();
+            CurrentChildView = new RoomsViewModel(_user);
             Caption = "Комнаты";
             Icon = IconChar.Bed;
         }
